@@ -5,6 +5,7 @@
 - UI/UX Changes
 - Bugfixes
 - Under-the-hood improvements
+- Some secrets
 
 ## v1.8
 
