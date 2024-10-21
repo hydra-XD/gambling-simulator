@@ -2,18 +2,6 @@ import random
 import time
 import os
 
-"""
-Updates since fork:
-Spouse switcher
-Fixed devtools variable mode
-Made devtools loop
-Added achievements to devtools
-Hid 'The Light is Blinding' from achievement submenu
-Added confirmation to variable and achievement tools
-Devtool error handling
-Main menu looping
-"""
-
 # Game state
 is_running = True
 player_credits = 250
