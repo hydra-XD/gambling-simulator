@@ -672,7 +672,7 @@ def game_over(source):
 
 
 clear_screen()
-print("Welcome to Gambling Simulator v1.9!\n\nPress [ENTER] to continue")
+print("Welcome to Gambling Simulator v1.10!\n\nPress [ENTER] to continue")
 input("")
 
 while is_running:

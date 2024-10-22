@@ -1,5 +1,11 @@
 # Gambling Simulator Changelog
 
+## v1.10 (WIP)
+
+- Bugfixes
+- 'Borrow from spouse' system
+- Fixed some achievements
+
 ## v1.9
 
 - UI/UX Changes
