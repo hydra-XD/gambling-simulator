@@ -308,18 +308,15 @@ def devtools():
                     break
         if menu == "misc":
             submenu = input(">> ")
-            if submenu == "suppress":
-                p = input("> ")
-                if p == "eilasiekaceht":
-                    suppress = True
-                else:
-                    suppress = False
-                    console_used = True
         if menu == "pass":
             if suppress:
                 console_used = False
             clear_screen()
+            console_used = True
             break
+    console_used = True
+    if suppress:
+        console_used = False
 
 # Display the home screen
 def display_home_screen():
