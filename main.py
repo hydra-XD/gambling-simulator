@@ -1,6 +1,4 @@
-import random
-import time
-import os
+import random, time, os 
 
 # Debug
 IS_DEV_BUILD = True
@@ -847,8 +845,7 @@ while is_running:
                 for i in l:
                     name += f"{i.capitalize()} "
                 print("You unlocked the achievement:", name)
-
-    input("\n[ENTER] to continue\n")
+        input("\n[ENTER] to continue\n")
 
     if player_credits <= 0:
         pass
