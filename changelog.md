@@ -5,6 +5,7 @@
 - Bugfixes
 - 'Borrow from spouse' system
 - Fixed some achievements
+- More Bugfixes
 
 ## v1.9
 
