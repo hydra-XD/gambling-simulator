@@ -12,6 +12,7 @@ jackpots = 0
 total_won = 0
 total_lost = 0
 spouse = "wife"
+cake = "thecakeisalie"
 
 # Upgrade purchases
 luck_upgrades = 0
@@ -89,7 +90,7 @@ achievements = {
     "your_family_is_worried": False, # spend 14 days gambling #
     "concerning_hygeine": False, # spend 50 days gambling #
     "what_year_is_it": False, # spend 100 days gambling #
-    "the_light_is_blinding": False, #leave the casino after 100 days #
+    "the_light_is_blinding": False #leave the casino after 100 days #
 
 }
 
@@ -207,6 +208,17 @@ You've Unlocked [{a}/{len(achievements)}] Achievements ({p}%)
     if achievements["the_light_is_blinding"]:
         print("    [x] The Light is Blinding (Leave the casino after 100 days)")
 
+def get_variable_type(var):
+    if isinstance(var, bool):
+        return bool
+    elif isinstance(var, int):
+        return int
+    elif isinstance(var, str):
+        return str
+
+    else:
+        return type(var)
+
 def devtools():
     global player_credits
     clear_screen()
@@ -214,25 +226,45 @@ def devtools():
     while True:
         menu = input("\n>>> ")
         if menu == "variable":
-            while True:
-                try:
-                    variable = input("Enter the variable name\n>> ")
-                    _type = type(variable)
-                    if _type == "int":
-                        value = int(input("Enter the variable value\n>> "))
-                    if _type == "str":
-                        value = input("Enter the variable value\n>> ")
-                    if _type == "bool":
-                        value = bool(input("Enter the variable value\n>> "))
+            variable = input("Enter the variable name\n>> ")
 
-                    menu = input(f"{variable} is currently set to {globals()[variable]}. Press [ENTER] to change it or 'cancel' to go back\n>> ")
-                    if menu != "cancel":
-                        globals()[variable] = value
-                        print(f"{variable} is now set to {globals()[variable]}")
-                    break
-                except:
-                    print("Variable does not exist")
-                    continue
+            if variable not in globals():
+                print(f"Variable '{variable}' not found")
+                continue
+
+            current_value = globals()[variable]
+            _type = get_variable_type(current_value)
+
+            menu = input(f"{variable} is currently set to {current_value}. Press [ENTER] to change it or 'cancel' to go back\n>> ")
+
+            if menu.lower() == "cancel":
+                break
+
+            if _type == int:
+                while True:
+                    try:
+                        value = int(input("Enter an integer value\n>> "))
+                        break
+                    except ValueError:
+                        print("Invalid input")
+            elif _type == str:
+                value = input("Enter a string value\n>> ")
+            elif _type == bool:
+                while True:
+                    bool_input = input("Enter a boolean value\n>> ").lower()
+                    if bool_input in ['true', '1', 'yes', 'y']:
+                        value = True
+                        break
+                    if bool_input in ['false', '0', 'no', 'n']:
+                        value = False
+                        break
+                    else:
+                        print("Invalid input")
+            else:
+                continue
+
+            globals()[variable] = value
+            print(f"{variable} is now set to {globals()[variable]}")
 
         if menu == "function":
             while True:
@@ -296,7 +328,7 @@ def display_home_screen():
             if menu == "achievements":
                 display_achievements()
                 input("\nPress [ENTER] to continue\n")
-            elif menu == "thecakeisalie":
+            elif menu == cake:
                 devtools()
             else:
                 break
