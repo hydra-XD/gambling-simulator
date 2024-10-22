@@ -33,6 +33,7 @@ streak_multiplier = 1.1
 
 # bank variables
 has_loan = False
+has_borrow = False
 interest_percent = 0.05
 loan_payment = 0
 loan_amount = 0
@@ -261,7 +262,7 @@ def devtools():
                     else:
                         print("Invalid input")
             else:
-                continue
+                break
 
             globals()[variable] = value
             print(f"{variable} is now set to {globals()[variable]}")
@@ -273,8 +274,8 @@ def devtools():
                     exec(f"{function}()")
                     break
                 except:
-                    print("Function does not exist")
-                    continue
+                    print(f"Function '{function}' not found")
+                    break
         if menu == "achievement":
             while True:
                 try:
@@ -286,9 +287,10 @@ def devtools():
                         elif not achievements[achievement_name]:
                             achievements[achievement_name] = True
                         print(f"{achievement_name} is now set to {achievements[achievement_name]}")
+                        break
                 except:
-                    print("Achievement does not exist")
-                    continue
+                    print(f"Achievement '{achievement_name}' not found")
+                    break
         if menu == "pass":
             clear_screen()
             break
@@ -599,15 +601,35 @@ def visit_bank():
             loan_payment -= player_credits
             player_credits = 0
 
+def borrow_from_spouse():
+    if spouse == "husband":
+        print("You break away from the machine to call your husband. He says that he'll let you have 100,000 credits, but if you lose with them he'll leave you. Take his deal?")
+    if spouse == "wife":
+        print("You break away from the machine to call your wife. She says that she'll let you have 100,000 credits, but if you lose with them she'll leave you. Take her deal?")
+
+    option = input("(y/n) >> ")
+
+    if option.lower() == "y":
+        if spouse == "husband":
+            print("You take his money, determined to win it all.")
+        if spouse == "wife":
+            print("You take her money, determined to win it all.")
+        has_borrow = True
+        credits = 100000
+    else:
+        print("You hang up and decide to go to the bank instead.")
+        visit_bank()
+
+
 def game_over(source):
     #end text conditions
     if spouse == "wife":
         end_text_1 = "\nYou are broke :(\nYou lost your house\nYou lost your wife\nShe took the kids\n\n\nWas it worth it?"
-        end_text_2 = "\nYou made it out!\nYour wife is waiting outside for you.\nShe asks, \"Did you win?\""
+        end_text_2 = "\nYou made it out!\nYour wife is waiting outside for you.\nShe hugs you and says, \"I'm glad you're back.\""
         end_text_3 = "\nYou made it out!\nYour wife is waiting outside for you.\nShe hands you a stack of papers\nShe says, \"I want a divorce.\""
     if spouse == "husband":
         end_text_1 = "\nYou are broke :(\nYou lost your house\nYou lost your husband\nHe took the kids\n\n\nWas it worth it?"
-        end_text_2 = "\nYou made it out!\nYour husband is waiting outside for you.\nHe asks, \"Did you win?\""
+        end_text_2 = "\nYou made it out!\nYour husband is waiting outside for you.\nHe hugs you and says, \"I'm glad you're back.\""
         end_text_3 = "\nYou made it out!\nYour husband is waiting outside for you.\nHe hands you a stack of papers\nHe says, \"I want a divorce.\""
 
     if source == 0: # bankruptcy
@@ -666,10 +688,12 @@ while is_running:
         days_passed += 1
     if player_credits <= 0:
         if not has_loan:
-            print("You have no credits. Would you like to visit the bank?")
-            option = input("(y/n) >> ")
-            if option == "y":
+            print(f"You have no credits. Type 'bank' to visit the bank or 'borrow' to use some of your {spouse}'s savings.")
+            option = input(">> ")
+            if option == "bank":
                 visit_bank()
+            if option == "borrow":
+                borrow_from_spouse()
             else:
                 game_over(0)
         else: 
@@ -681,18 +705,22 @@ while is_running:
         player_credits = 0
     clear_screen()
     bet = 0
-    while bet < 1 or not isinstance(bet, int) or bet > player_credits:
-        try:
-            print(f"Credits: {player_credits:,}")
-            bet = int(input("Bet: "))
-            if bet > player_credits:
-                print("You don't have enough money for that")
-            elif bet == player_credits:
-                achievements["confidence_is_key"] = True
-            elif bet == 0:
+
+    if has_borrow:
+        bet = player_credits
+    else:
+        while bet < 1 or not isinstance(bet, int) or bet > player_credits:
+            try:
+                print(f"Credits: {player_credits:,}")
+                bet = int(input("Bet: "))
+                if bet > player_credits:
+                    print("You don't have enough money for that")
+                elif bet == player_credits:
+                    achievements["confidence_is_key"] = True
+                elif bet == 0:
+                    print("Bet must be a non-zero whole number")
+            except ValueError:
                 print("Bet must be a non-zero whole number")
-        except ValueError:
-            print("Bet must be a non-zero whole number")
 
     clear_screen()
 
@@ -710,6 +738,8 @@ while is_running:
         total_won += reward
     else:
         print("You Lost!")
+        if has_borrow:
+            game_over(3)
         if bet == player_credits:
             achievements["aw_dangit"] = True
         if has_insurance:
