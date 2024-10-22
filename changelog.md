@@ -3,7 +3,7 @@
 ## v1.10 (WIP)
 
 - Bugfixes
-- 'Borrow from spouse' system
+- Added the ability to borrow from your spouse
 - Fixed some achievements
 - More Bugfixes
 
