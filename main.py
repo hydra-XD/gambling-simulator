@@ -2,6 +2,11 @@ import random
 import time
 import os
 
+# Debug
+IS_DEV_BUILD = True
+console_used = False
+suppress = False
+
 # Game state
 is_running = True
 player_credits = 250
@@ -161,7 +166,7 @@ def calculate_achievements():
 # display all achievements
 def display_achievements():
     calculate_achievements()
-    global achievements
+    global achievements, console_used
     a = 0
     for i in achievements.keys():
         if achievements[i]:
@@ -173,7 +178,7 @@ def display_achievements():
         p = 0
     
     print(f"""
-You've Unlocked [{a}/{len(achievements)}] Achievements ({p}%)
+You've Unlocked [{a}/{len(achievements)}] Achievements ({p}%) {"(Cheats used)" if console_used else ""}
     
     [{"x" if achievements["getting_somewhere"] else " "}] Getting Somewhere (Win a spin)
     [{"x" if achievements["on_a_roll"] else " "}] On a Roll (Win a total of 1,000 credits)
@@ -210,8 +215,11 @@ You've Unlocked [{a}/{len(achievements)}] Achievements ({p}%)
     [{"x" if achievements["your_family_is_worried"] else " "}] Your Family is Worried (Spend 14 days gambling)
     [{"x" if achievements["concerning_hygeine"] else " "}] Concerning Hygeine (Spend 50 days gambling)
     [{"x" if achievements["what_year_is_it"] else " "}] What Year is It? (Spend 100 days gambling)""")
+    
     if achievements["the_light_is_blinding"]:
         print("    [x] The Light is Blinding (Leave the casino after 100 days)")
+    if console_used:
+        print("\n    [x] Counting Cards (Use the developer console, you nasty cheater)")
 
 def get_variable_type(var):
     if isinstance(var, bool):
@@ -225,7 +233,7 @@ def get_variable_type(var):
         return type(var)
 
 def devtools():
-    global player_credits
+    global player_credits, console_used
     clear_screen()
     print("Welcome to the V.I.P. Club")
     while True:
@@ -270,11 +278,13 @@ def devtools():
 
             globals()[variable] = value
             print(f"{variable} is now set to {globals()[variable]}")
+            console_used = True
 
         if menu == "function":
             while True:
                 try:
                     function = input("Enter the function name\n>> ")
+                    console_used = True
                     exec(f"{function}()")
                     break
                 except:
@@ -291,11 +301,23 @@ def devtools():
                         elif not achievements[achievement_name]:
                             achievements[achievement_name] = True
                         print(f"{achievement_name} is now set to {achievements[achievement_name]}")
+                        console_used = True                 
                         break
                 except:
                     print(f"Achievement '{achievement_name}' not found")
                     break
+        if menu == "misc":
+            submenu = input(">> ")
+            if submenu == "suppress":
+                p = input("> ")
+                if p == "eilasiekaceht":
+                    suppress = True
+                else:
+                    suppress = False
+                    console_used = True
         if menu == "pass":
+            if suppress:
+                console_used = False
             clear_screen()
             break
 
@@ -672,7 +694,10 @@ def game_over(source):
 
 
 clear_screen()
-print("Welcome to Gambling Simulator v1.10!\n\nPress [ENTER] to continue")
+if IS_DEV_BUILD:
+    print("Welcome to Gambling Simulator dev-1.10!\nThis is a developer build and may be unfinished or broken.\n\nPress [ENTER] to continue")
+else:
+    print("Welcome to Gambling Simulator v1.10!\n\nPress [ENTER] to continue")
 input("")
 
 while is_running:
@@ -808,9 +833,7 @@ while is_running:
         # find newly unlocked achievements
         a = []
         for i in achievements.keys():
-            # somehow the lists are the same
-            # i'll fix it
-            if (achievements[i]) != (achievements_start[i]): # THIS LINE IS BAD!!!!!!
+            if (achievements[i]) != (achievements_start[i]):
                 a.append(i)
 
         # display achievements
