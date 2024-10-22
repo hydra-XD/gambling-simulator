@@ -608,6 +608,7 @@ def visit_bank():
 
                 print(f"You took out a loan of {amount:,} credits\nBe prepared to pay it back in three days")
                 input("\nPress [ENTER] to continue\n")
+                print("pc: ", player_credits)
                 break
     else:
         print(f"Time to pay your loan back.\nYour loan payment is {loan_payment:,} credits")
@@ -648,6 +649,7 @@ def borrow_from_spouse():
 
 
 def game_over(source):
+    print("pc: ", player_credits)
     #end text conditions
     if spouse == "wife":
         end_text_1 = "\nYou are broke :(\nYou lost your house\nYou lost your wife\nShe took the kids\n\n\nWas it worth it?"
@@ -729,7 +731,7 @@ while is_running:
             option = input(">> ")
             if option == "bank":
                 visit_bank()
-            if not has_borrowed and spins >= 10:
+            elif not has_borrowed and spins >= 10:
                 if option == "borrow":
                     borrow_from_spouse()
             else:
