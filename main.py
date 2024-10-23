@@ -117,7 +117,7 @@ bonus_achievements = {
 # Bonus and letter options
 bonuses = ["WIN", "FUN", "FLY", "ABC", "AAA", "DIE", "ASS", "AOL", "HIT",
            "BRO", "BET", "TIT", "SCP", "WHY", "BOP", "BEE", "BUM", "ZAP",
-           "DEW", "MUM", "HAG"]
+           "DEW", "MUM", "HAG", "WTF", "PBS", "POO"]
 letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L",
            "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X",
            "Y", "Z"]
@@ -687,7 +687,7 @@ def visit_shop():
 
 # visit the in-game bank
 def visit_bank():
-    global player_credits, loan_amount, loan_payment, has_loan, interest_percent, achievements, loans_total
+    global player_credits, loan_amount, loan_payment, has_loan, interest_percent, achievements, loans_total, loans_paid
     clear_screen()
     if not has_loan:
         while True:
@@ -719,7 +719,6 @@ def visit_bank():
                 print(
                     f"You took out a loan of {amount:,} credits\nBe prepared to pay it back in three days")
                 input("\nPress [ENTER] to continue\n")
-                print("pc: ", player_credits)
                 break
     else:
         print(
@@ -729,6 +728,7 @@ def visit_bank():
         if player_credits > loan_payment:
             player_credits -= loan_payment
             loans_paid += 1
+            has_loan = False
             achievements["money_management"] = True
             if loans_paid == 3:
                 achievements["redemption_arc"] = True
@@ -755,7 +755,7 @@ def borrow_from_spouse():
             print("You take his money, determined to win it all.")
         if spouse == "wife":
             print("You take her money, determined to win it all.")
-        has_borrow = True
+        has_borrowed = True
         player_credits = borrow_amount
     else:
         print("You hang up and decide to go to the bank instead.")
@@ -764,8 +764,11 @@ def borrow_from_spouse():
 
 
 def game_over(source):
-    print("pc: ", player_credits)
+    global spins, spouse, achievements
     # end text conditions
+
+    print(f"After {spins} days...")
+
     if spouse == "wife":
         end_text_1 = "\nYou are broke :(\nYou lost your house\nYou lost your wife\nShe took the kids\n\n\nWas it worth it?"
         end_text_2 = "\nYou made it out!\nYour wife is waiting outside for you.\nShe hugs you and says, \"I'm glad you're back.\""
