@@ -391,8 +391,7 @@ def devtools():
             while True:
                 try:
                     achievement_name = input("Enter achievement name\n>> ")
-                    menu = input(
-                        f"{achievement_name} is currently set to {achievements[achievement_name]}. Press [ENTER] to toggle it or 'cancel' to go back\n>> ")
+                    menu = input(f"{achievement_name} is currently set to {achievements[achievement_name]}. Press [ENTER] to toggle it or 'cancel' to go back\n>> ")
                     if menu != "cancel":
                         if achievements[achievement_name]:
                             achievements[achievement_name] = False
@@ -407,11 +406,27 @@ def devtools():
         if menu == "misc":
             submenu = input(">> ")
             if submenu == "save":
-                f = input("Filename: ")
+                f = input(">> ")
                 dump_state(f)
             elif submenu == "load":
-                f = input("Filename: ")
+                f = input(">> ")
                 restore_state(f)
+            elif submenu == "bonus":
+                while True:
+                    try:
+                        achievement_name = input("Enter achievement name\n>> ")
+                        menu = input(f"{achievement_name} is currently set to {bonus_achievements[achievement_name]}. Press [ENTER] to toggle it or 'cancel' to go back\n>> ")
+                        if menu != "cancel":
+                            if bonus_achievements[achievement_name]:
+                                bonus_achievements[achievement_name] = False
+                            elif not bonus_achievements[achievement_name]:
+                                bonus_achievements[achievement_name] = True
+                            print(
+                                f"{achievement_name} is now set to {bonus_achievements[achievement_name]}")
+                            break
+                    except:
+                        print(f"Achievement '{achievement_name}' not found")
+                        break
         if menu == "pass":
             clear_screen()
             break
