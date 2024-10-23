@@ -2,6 +2,8 @@ import random
 import time
 import os
 
+import dill
+
 # Debug
 IS_DEV_BUILD = True
 console_used = False
@@ -148,6 +150,7 @@ bar_dialogue = [
     '"Here, have a beer on me"',
     '"Kids these days..."',
     '"Went to college for physics, why am I here?"'
+    '"Everyone leaves eventually. Will you?"',
 ]
 
 bar_actions = [
@@ -158,6 +161,12 @@ bar_actions = [
     "The bartender isn't in. There's a sign that says: \"Leave the money on the counter. Help yourself.\"",
     "The bartender isn't in. There's a woman at the counter who eyes you with an emotion you can't decipher."
 ]
+
+def dump_state():
+    dill.dump_session(filename="session.pkl")
+
+def restore_state():
+    dill.
 
 def pick_flavor_text():
     global spins, flavor_text
