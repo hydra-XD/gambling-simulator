@@ -146,7 +146,8 @@ bar_dialogue = [
     '"My husband says I need to get a real job"',
     '"Rough day, huh?"',
     '"Here, have a beer on me"',
-    '"Kids these days..."'
+    '"Kids these days..."',
+    '"Went to college for physics, why am I here?"'
 ]
 
 bar_actions = [
