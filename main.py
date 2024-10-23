@@ -1,4 +1,6 @@
-import random, time, os 
+import random
+import time
+import os
 
 # Debug
 IS_DEV_BUILD = True
@@ -34,14 +36,14 @@ luck = 0
 reward_multiplier = 1.0
 streak_multiplier = 1.1
 
-# bank variables
+# Bank variables
 has_loan = False
 interest_percent = 0.05
 loan_payment = 0
 loan_amount = 0
 days_passed = 0
 
-# insurance variables
+# Insurance variables
 has_insurance = False
 insurance_coverage = 0
 insurance_payment = 0
@@ -49,56 +51,56 @@ insurance_type = 0
 total_covered = 0
 insurance_base = 0
 
-# achievement variables
+# Achievement variables
 total_won = 0
 total_lost = 0
 total_spent_in_shop = 0
 loans_total = 0
 loans_paid = 0
 
-# borrowing variables
+# Borrowing variables
 has_borrow = False
 has_borrowed = False
 borrow_amount = 3
 
 achievements = {
 
-    "getting_somewhere": False, # win a spin for the first time #
-    "on_a_roll": False, # win 1,000 credits #
-    "a_decent_sum": False, # win 10,000 credits #
-    "rolling_in_dough": False, # win 100,000 credits #
-    "millionaire": False, # win 1,000,000 credits #
+    "getting_somewhere": False,  # win a spin for the first time #
+    "on_a_roll": False,  # win 1,000 credits #
+    "a_decent_sum": False,  # win 10,000 credits #
+    "rolling_in_dough": False,  # win 100,000 credits #
+    "millionaire": False,  # win 1,000,000 credits #
 
-    "oof_moment": False, # lose a spin for the first time #
-    "you_should_stop": False, # lose 1,000 credits #
-    "you_should_REALLY_stop": False, # lose 10,000 credits #
-    "you're_just_gonna_lose_more": False, # lose 100,000 credits #
-    "rock_bottom": False, # lose 1,000,000 credits #
+    "oof_moment": False,  # lose a spin for the first time #
+    "you_should_stop": False,  # lose 1,000 credits #
+    "you_should_REALLY_stop": False,  # lose 10,000 credits #
+    "you're_just_gonna_lose_more": False,  # lose 100,000 credits #
+    "rock_bottom": False,  # lose 1,000,000 credits #
 
-    "confidence_is_key": False, # go all in on a spin #
-    "i_can't_stop_winning": False, # win an all-in spin #
-    "aw_dangit": False, # lose an all-in spin #
+    "confidence_is_key": False,  # go all in on a spin #
+    "i_can't_stop_winning": False,  # win an all-in spin #
+    "aw_dangit": False,  # lose an all-in spin #
 
-    "at_least_i_still_have_clothes": False, # take out a loan #
-    "petty_cash": False, # take out a loan less than or equal to 10 credits #
-    "money_management": False, # pay back a loan #
-    "still_hanging_in_there": False, # take out another loan #
-    "redemption_arc": False, # pay back your third loan #
+    "at_least_i_still_have_clothes": False,  # take out a loan #
+    "petty_cash": False,  # take out a loan less than or equal to 10 credits #
+    "money_management": False,  # pay back a loan #
+    "still_hanging_in_there": False,  # take out another loan #
+    "redemption_arc": False,  # pay back your third loan #
 
-    "overload": False, # max out energy drinks #
-    "i_feel_funny": False, # first shop purchase #
-    "big_spender": False, # spend 1,000 credits in the shop #
-    "i'll_have_the_regular": False, # spend 10,000 credits in the shop #
-    "writing_checks_left_and_right": False, # spend 100,000 credits in the shop #
-    
-    "insured": False, # purchase an insurance plan #
-    "volatile": False, # make your insurance rate rise #
-    "the_bills_caught_up_to_you": False, # can't afford an insurance payment #
+    "overload": False,  # max out energy drinks #
+    "i_feel_funny": False,  # first shop purchase #
+    "big_spender": False,  # spend 1,000 credits in the shop #
+    "i'll_have_the_regular": False,  # spend 10,000 credits in the shop #
+    "writing_checks_left_and_right": False,  # spend 100,000 credits in the shop #
 
-    "your_family_is_worried": False, # spend 14 days gambling #
-    "concerning_hygeine": False, # spend 50 days gambling #
-    "what_year_is_it": False, # spend 100 days gambling #
-    "the_light_is_blinding": False #leave the casino after 100 days #
+    "insured": False,  # purchase an insurance plan #
+    "volatile": False,  # make your insurance rate rise #
+    "the_bills_caught_up_to_you": False,  # can't afford an insurance payment #
+
+    "your_family_is_worried": False,  # spend 14 days gambling #
+    "concerning_hygeine": False,  # spend 50 days gambling #
+    "what_year_is_it": False,  # spend 100 days gambling #
+    "the_light_is_blinding": False  # leave the casino after 100 days #
 
 }
 
@@ -110,12 +112,14 @@ letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L",
            "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X",
            "Y", "Z"]
 
+
 # Clear the screen
 def clear_screen():
-    if os.name == 'nt': #windows
+    if os.name == 'nt':  # windows
         _ = os.system('cls')
-    else: #mac & linux (posix)
+    else:  # mac & linux (posix)
         _ = os.system('clear')
+
 
 def calculate_achievements():
     if total_won >= 1:
@@ -161,6 +165,7 @@ def calculate_achievements():
     if spins >= 100:
         achievements["what_year_is_it"] = True
 
+
 # display all achievements
 def display_achievements():
     calculate_achievements()
@@ -171,10 +176,11 @@ def display_achievements():
             a += 1
 
     try:
-        p = round((100 * (a / len(achievements)))) # calculate percent of achievements
+        # calculate percent of achievements
+        p = round((100 * (a / len(achievements))))
     except ZeroDivisionError:
         p = 0
-    
+
     print(f"""
 You've Unlocked [{a}/{len(achievements)}] Achievements ({p}%) {"(Cheats used)" if console_used else ""}
     
@@ -213,11 +219,13 @@ You've Unlocked [{a}/{len(achievements)}] Achievements ({p}%) {"(Cheats used)" i
     [{"x" if achievements["your_family_is_worried"] else " "}] Your Family is Worried (Spend 14 days gambling)
     [{"x" if achievements["concerning_hygeine"] else " "}] Concerning Hygeine (Spend 50 days gambling)
     [{"x" if achievements["what_year_is_it"] else " "}] What Year is It? (Spend 100 days gambling)""")
-    
+
     if achievements["the_light_is_blinding"]:
         print("    [x] The Light is Blinding (Leave the casino after 100 days)")
     if console_used:
-        print("\n    [x] Counting Cards (Use the developer console, you nasty cheater)")
+        print(
+            "\n    [x] Counting Cards (Use the developer console, you nasty cheater)")
+
 
 def get_variable_type(var):
     if isinstance(var, bool):
@@ -229,6 +237,7 @@ def get_variable_type(var):
 
     else:
         return type(var)
+
 
 def devtools():
     global player_credits, console_used
@@ -246,7 +255,8 @@ def devtools():
             current_value = globals()[variable]
             _type = get_variable_type(current_value)
 
-            menu = input(f"{variable} is currently set to {current_value}. Press [ENTER] to change it or 'cancel' to go back\n>> ")
+            menu = input(
+                f"{variable} is currently set to {current_value}. Press [ENTER] to change it or 'cancel' to go back\n>> ")
 
             if menu.lower() == "cancel":
                 break
@@ -292,14 +302,16 @@ def devtools():
             while True:
                 try:
                     achievement_name = input("Enter achievement name\n>> ")
-                    menu = input(f"{achievement_name} is currently set to {achievements[achievement_name]}. Press [ENTER] to toggle it or 'cancel' to go back\n>> ")
+                    menu = input(
+                        f"{achievement_name} is currently set to {achievements[achievement_name]}. Press [ENTER] to toggle it or 'cancel' to go back\n>> ")
                     if menu != "cancel":
                         if achievements[achievement_name]:
                             achievements[achievement_name] = False
                         elif not achievements[achievement_name]:
                             achievements[achievement_name] = True
-                        print(f"{achievement_name} is now set to {achievements[achievement_name]}")
-                        console_used = True                 
+                        print(
+                            f"{achievement_name} is now set to {achievements[achievement_name]}")
+                        console_used = True
                         break
                 except:
                     print(f"Achievement '{achievement_name}' not found")
@@ -316,6 +328,7 @@ def devtools():
     if suppress:
         console_used = False
 
+
 # Display the home screen
 def display_home_screen():
     global insurance_payment
@@ -327,7 +340,7 @@ def display_home_screen():
             print("\nWin%: " + str(round(win_percentage, 2)) + "%")
         except ZeroDivisionError:
             print("\nWin%: N/A")
-        print("Reward Multiplier:", round(reward_multiplier,2))
+        print("Reward Multiplier:", round(reward_multiplier, 2))
         print("Luck:", luck)
         print("Streak Multiplier:", round(streak_multiplier, 1))
         if has_insurance:
@@ -343,11 +356,13 @@ def display_home_screen():
             if round(total_covered / 20) >= insurance_base:
                 insurance_payment = round(total_covered / 20)
 
-            print(f"\nInsurance Information:\n- Plan: {plan}\n- Payment: {insurance_payment} credits/day\n- Coverage: {insurance_coverage}%")
+            print(
+                f"\nInsurance Information:\n- Plan: {plan}\n- Payment: {insurance_payment} credits/day\n- Coverage: {insurance_coverage}%")
 
         if spins < 100:
-            menu = input("\nType 'achievements' to view your achievements or press [ENTER] to spin\n>> ")
-            
+            menu = input(
+                "\nType 'achievements' to view your achievements or press [ENTER] to spin\n>> ")
+
             if menu == "achievements":
                 display_achievements()
                 input("\nPress [ENTER] to continue\n")
@@ -357,7 +372,8 @@ def display_home_screen():
                 break
                 return
         elif spins >= 100:
-            menu_ = input("\nType 'achievements' to view your achievements, press [ENTER] to spin, or type 'leave' to escape\n>> ")
+            menu_ = input(
+                "\nType 'achievements' to view your achievements, press [ENTER] to spin, or type 'leave' to escape\n>> ")
 
             if menu_ == "achievements":
                 display_achievements()
@@ -370,6 +386,7 @@ def display_home_screen():
             else:
                 break
                 return
+
 
 # Get random letters for spinning
 def get_letters() -> list:
@@ -392,6 +409,8 @@ def get_letters() -> list:
     return [a, b, c]
 
 # Calculate reward based on spin outcome and bet
+
+
 def calculate_reward(spin: list, bet: int) -> int:
     global wins, streak
     double = False
@@ -434,6 +453,7 @@ def calculate_reward(spin: list, bet: int) -> int:
     else:
         return int(reward * reward_multiplier)
 
+
 # handle the insurance shop
 def insurance_shop():
     global has_insurance, insurance_coverage, insurance_payment, insurance_type, player_credits, insurance_base
@@ -454,10 +474,10 @@ Here are our plans:
 NOTE: All plans require a down payment equal to 10 times their starting rate
       Rate increases based on how much your insurance has covered
         """
-        )
+    )
     while True:
         option = input("Choose a plan or type 'pass' to leave\n>> ").lower()
-        if option == "pass": 
+        if option == "pass":
             return
         elif option == "no plan":
             has_insurance = False
@@ -509,6 +529,7 @@ NOTE: All plans require a down payment equal to 10 times their starting rate
     insurance_base = insurance_payment
     print("\nThank you for your business!\n\n[ENTER] to continue")
     input("")
+
 
 # Handle the in-game shop for upgrades
 def visit_shop():
@@ -574,6 +595,7 @@ def visit_shop():
                 break
     total_spent_in_shop = (s - player_credits)
 
+
 # visit the in-game bank
 def visit_bank():
     global player_credits, loan_amount, loan_payment, has_loan, interest_percent, achievements, loans_total
@@ -584,7 +606,8 @@ def visit_bank():
             print("Credits:", player_credits)
             print("Welcome to World Liberty Financial!\nType 'loan <amount>' for a loan")
             in_ = input(">> ")
-            if len(in_.split(" ")) == 1: continue
+            if len(in_.split(" ")) == 1:
+                continue
             if in_.split(" ")[0] == "loan":
                 amount = int(in_.split(" ")[1])
                 loan_amount = amount
@@ -604,12 +627,14 @@ def visit_bank():
                 if loans_total >= 2:
                     achievements["still_hanging_in_there"] = True
 
-                print(f"You took out a loan of {amount:,} credits\nBe prepared to pay it back in three days")
+                print(
+                    f"You took out a loan of {amount:,} credits\nBe prepared to pay it back in three days")
                 input("\nPress [ENTER] to continue\n")
                 print("pc: ", player_credits)
                 break
     else:
-        print(f"Time to pay your loan back.\nYour loan payment is {loan_payment:,} credits")
+        print(
+            f"Time to pay your loan back.\nYour loan payment is {loan_payment:,} credits")
         print("Credits:", player_credits)
         input("\nPress [ENTER] to continue\n")
         if player_credits > loan_payment:
@@ -623,13 +648,16 @@ def visit_bank():
             loan_payment -= player_credits
             player_credits = 0
 
+
 def borrow_from_spouse():
     global has_borrowed, has_borrow, player_credits
     borrow_amount = (spins * 1000)
     if spouse == "husband":
-        print(f"You break away from the machine to call your husband. He says that he'll let you have {'{:,}'.format(borrow_amount)} credits, but if you lose with them he'll leave you. Take his deal?")
+        print(
+            f"You break away from the machine to call your husband. He says that he'll let you have {'{:,}'.format(borrow_amount)} credits, but if you lose with them he'll leave you. Take his deal?")
     if spouse == "wife":
-        print(f"You break away from the machine to call your wife. She says that she'll let you have {'{:,}'.format(borrow_amount)} credits, but if you lose with them she'll leave you. Take her deal?")
+        print(
+            f"You break away from the machine to call your wife. She says that she'll let you have {'{:,}'.format(borrow_amount)} credits, but if you lose with them she'll leave you. Take her deal?")
 
     option = input("(y/n) >> ")
 
@@ -648,7 +676,7 @@ def borrow_from_spouse():
 
 def game_over(source):
     print("pc: ", player_credits)
-    #end text conditions
+    # end text conditions
     if spouse == "wife":
         end_text_1 = "\nYou are broke :(\nYou lost your house\nYou lost your wife\nShe took the kids\n\n\nWas it worth it?"
         end_text_2 = "\nYou made it out!\nYour wife is waiting outside for you.\nShe hugs you and says, \"I'm glad you're back.\""
@@ -659,12 +687,12 @@ def game_over(source):
         end_text_2 = "\nYou made it out!\nYour husband is waiting outside for you.\nHe hugs you and says, \"I'm glad you're back.\""
         end_text_3 = "\nYou made it out!\nYour husband is waiting outside for you.\nHe hands you a stack of papers\nHe says, \"I want a divorce.\""
         end_text_4 = "You lost the money your husband gave you! He calls, but you're too ashamed to pick up. You know it's over."
-    if source == 0: # bankruptcy
+    if source == 0:  # bankruptcy
         print(end_text_1)
-    elif source == 1: # loan payment
+    elif source == 1:  # loan payment
         print(f"You missed your loan payment by {loan_payment:,} credits")
         print(end_text_1)
-    elif source == 2: # ESCAPE
+    elif source == 2:  # ESCAPE
         achievements["the_light_is_blinding"] = True
         calculate_achievements()
 
@@ -673,7 +701,8 @@ def game_over(source):
             if achievements[i]:
                 a += 1
         try:
-            p = round((100 * (a / len(achievements)))) # calculate percent of achievements
+            # calculate percent of achievements
+            p = round((100 * (a / len(achievements))))
         except ZeroDivisionError:
             p = 0
 
@@ -681,10 +710,9 @@ def game_over(source):
             print(end_text_2)
         if p < 100:
             print(end_text_3)
-    elif source == 3: #Failed lifeline
+    elif source == 3:  # Failed lifeline
         print(end_text_4)
 
-        
     display_achievements()
     while True:
         time.sleep(1)
@@ -692,7 +720,8 @@ def game_over(source):
 
 clear_screen()
 if IS_DEV_BUILD:
-    print("Welcome to Gambling Simulator dev-1.10!\nThis is a developer build and may be unfinished or broken.\n\nPress [ENTER] to continue")
+    print(
+        "Welcome to Gambling Simulator dev-1.10!\nThis is a developer build and may be unfinished or broken.\n\nPress [ENTER] to continue")
 else:
     print("Welcome to Gambling Simulator v1.10!\n\nPress [ENTER] to continue")
 input("")
@@ -701,7 +730,7 @@ while is_running:
     achievements_start = {}
 
     for i in achievements.keys():
-        achievements_start.update({i:achievements[i]})
+        achievements_start.update({i: achievements[i]})
 
     a_before = 0
     for i in achievements.keys():
@@ -722,7 +751,8 @@ while is_running:
     if player_credits <= 0:
         if not has_loan:
             if not has_borrowed and spins >= 10:
-                print(f"You have no credits. Type 'bank' to visit the bank or 'borrow' to borrow money from your {spouse}.")
+                print(
+                    f"You have no credits. Type 'bank' to visit the bank or 'borrow' to borrow money from your {spouse}.")
             else:
                 print("You have no credits. Type 'bank' to visit the bank.")
 
@@ -734,7 +764,7 @@ while is_running:
                     borrow_from_spouse()
             else:
                 game_over(0)
-        else: 
+        else:
             clear_screen()
             if has_loan and days_passed > 3:
                 game_over(1)
@@ -790,13 +820,13 @@ while is_running:
             if covered <= 1:
                 covered = 1
             total_covered += covered
-            print("Thankfully, your insurance covered " + f"{covered:,}" + " credit" + ("s" if covered > 1 else "") + ".")
+            print("Thankfully, your insurance covered " +
+                  f"{covered:,}" + " credit" + ("s" if covered > 1 else "") + ".")
             loss = int(bet - covered)
         else:
             loss = bet
         total_lost += loss
 
-        
         player_credits -= loss
 
     if has_insurance:
@@ -852,7 +882,8 @@ while is_running:
     else:
         while True:
             clear_screen()
-            print("Type 'shop' to visit the shop, 'insurance' to buy insurance, or pass to leave")
+            print(
+                "Type 'shop' to visit the shop, 'insurance' to buy insurance, or pass to leave")
             in_ = input(">> ")
             if in_ == "shop":
                 visit_shop()
