@@ -162,13 +162,13 @@ bar_actions = [
     "The bartender isn't in. There's a woman at the counter who eyes you with an emotion you can't decipher."
 ]
 
-"""
-def dump_state():
-    dill.dump_session(filename="session.pkl")
 
-def restore_state():
-    dill.
-"""
+def dump_state(filename):
+    dill.dump_session(filename=filename)
+
+def restore_state(filename):
+    dill.load_session(filename)
+
 
 def pick_flavor_text():
     global spins, flavor_text
@@ -406,6 +406,12 @@ def devtools():
                     break
         if menu == "misc":
             submenu = input(">> ")
+            if submenu == "save":
+                f = input("Filename: ")
+                dump_state(f)
+            elif submenu == "load":
+                f = input("Filename: ")
+                restore_state(f)
         if menu == "pass":
             clear_screen()
             break
