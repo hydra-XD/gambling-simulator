@@ -36,6 +36,9 @@ luck = 0
 reward_multiplier = 1.0
 streak_multiplier = 1.1
 
+# bar variables
+bar_dialogue_count = 0
+
 # Bank variables
 has_loan = False
 interest_percent = 0.05
@@ -104,6 +107,13 @@ achievements = {
 
 }
 
+# bonus achievements
+bonus_achievements = {
+    "counting_cards": False, # use the devtools
+    "extra_zesty": False, # see all flavor text
+    "regular_patron": False,  # have every conversation with the bartender
+}
+
 # Bonus and letter options
 bonuses = ["WIN", "FUN", "FLY", "ABC", "AAA", "DIE", "ASS", "AOL", "HIT",
            "BRO", "BET", "TIT", "SCP", "WHY", "BOP", "BEE", "BUM", "ZAP",
@@ -112,13 +122,59 @@ letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L",
            "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X",
            "Y", "Z"]
 
+# FLAVOR TEXT (EXTRA ZESTY)
+flavor_text = [
+    {"days_start": 0, "days_end": 1, "text": "You can practically taste your winnings already.", "displayed": False},
+    {"days_start": 2, "days_end": 5, "text": "You haven't been here very long, but you feel like you could stay forever.", "displayed": False},
+    {"days_start": 6, "days_end": 9, "text": "You begin to notice a regular deposit of crumbs at your machine. Are they yours?", "displayed": False},
+    {"days_start": 10, "days_end": 14, "text": "The handle on the machine is getting greasy. You should wash your hands.", "displayed": False},
+    {"days_start": 15, "days_end": 19, "text": "Your back is weary of hunching over the machine. Taking a walk might help.", "displayed": False},
+    {"days_start": 20, "days_end": 24, "text": "You haven't seen the sun in quite a while.", "displayed": False},
+    {"days_start": 25, "days_end": 54, "text": "Are you satisfied yet?", "displayed": False},
+    {"days_start": 55, "days_end": 94, "text": "Your committment would be inspiring, were it not an addiction.", "displayed": False},
+    {"days_start": 95, "days_end": 100, "text": "Is the casino still real?", "displayed": False}
+]
+
+bar_dialogue = [
+    '"Hey there, care for a drink?"',
+    '"How are the winnings?"',
+    '"Good day, huh?"',
+    '"Business is slow today. Take a look."',
+    '"What\'s new?"',
+    '"Every day\'s a good day to get drunk."',
+    '"How\'re the kids?"',
+    '"My husband says I need to get a real job"',
+    '"Rough day, huh?"',
+    '"Here, have a beer on me"',
+    '"Kids these days..."'
+]
+
+bar_actions = [
+    "The bartender looks up and says, ",
+    "The bartender doesn't look up when you enter.",
+    "The bartender seems engrossed in cleaning a glass. He doesn't appear to notice you.",
+    "The bartender is wiping down the counter - the room smells vaguely of cleaning chemicals and vomit.",
+    "The bartender isn't in. There's a sign that says: \"Leave the money on the counter. Help yourself.\"",
+    "The bartender isn't in. There's a woman at the counter who eyes you with an emotion you can't decipher."
+]
+
+def pick_flavor_text():
+    global spins, flavor_text
+    for f in flavor_text:
+        if f["days_start"] <= spins <= f["days_end"] and not f["displayed"]:
+            if random.randint(1, ((f["days_end"] - f["days_start"]))) == 1:
+                f["displayed"] = True
+                return f["text"]
+            else:
+                return "Just another day in the casino."
+    return "Just another day in the casino."
 
 # Clear the screen
 def clear_screen():
     if os.name == 'nt':  # windows
-        _ = os.system('cls')
+        os.system('cls')
     else:  # mac & linux (posix)
-        _ = os.system('clear')
+        os.system('clear')
 
 
 def calculate_achievements():
@@ -164,6 +220,16 @@ def calculate_achievements():
         achievements["concerning_hygeine"] = True
     if spins >= 100:
         achievements["what_year_is_it"] = True
+
+    if console_used == True:
+        bonus_achievements["counting_cards"] = True
+        
+    b = 0
+    for f in flavor_text:
+        if f["displayed"]:
+            b += 1
+    if b == len(flavor_text):
+        bonus_achievements["extra_zesty"] = True
 
 
 # display all achievements
@@ -222,9 +288,22 @@ You've Unlocked [{a}/{len(achievements)}] Achievements ({p}%) {"(Cheats used)" i
 
     if achievements["the_light_is_blinding"]:
         print("    [x] The Light is Blinding (Leave the casino after 100 days)")
-    if console_used:
-        print(
-            "\n    [x] Counting Cards (Use the developer console, you nasty cheater)")
+
+    b = 0 
+    for i in bonus_achievements.keys():
+        if bonus_achievements[i]:
+            b += 1
+
+    if b > 0:
+        t = "?" if b < len(bonus_achievements) else len(bonus_achievements)
+        print(f"\nYou've unlocked [{b}/{t}] Bonus Achievements\n")
+
+        if bonus_achievements["counting_cards"]:
+            print("    [x] Counting Cards (Use the developer console, you nasty cheater)")
+        if bonus_achievements["extra_zesty"]:
+            print("    [x] Extra Zesty (See all flavor texts on the home screen)")
+        if bonus_achievements["regular_patron"]:
+            print("    [x] Regular Patron (See all Bartender dialogues)")
 
 
 def get_variable_type(var):
@@ -286,13 +365,11 @@ def devtools():
 
             globals()[variable] = value
             print(f"{variable} is now set to {globals()[variable]}")
-            console_used = True
 
         if menu == "function":
             while True:
                 try:
                     function = input("Enter the function name\n>> ")
-                    console_used = True
                     exec(f"{function}()")
                     break
                 except:
@@ -311,7 +388,6 @@ def devtools():
                             achievements[achievement_name] = True
                         print(
                             f"{achievement_name} is now set to {achievements[achievement_name]}")
-                        console_used = True
                         break
                 except:
                     print(f"Achievement '{achievement_name}' not found")
@@ -319,10 +395,7 @@ def devtools():
         if menu == "misc":
             submenu = input(">> ")
         if menu == "pass":
-            if suppress:
-                console_used = False
             clear_screen()
-            console_used = True
             break
     console_used = True
     if suppress:
@@ -335,6 +408,7 @@ def display_home_screen():
     while True:
         clear_screen()
         print(f"Credits: {player_credits:,}")
+        print(("-" * 20))
         try:
             win_percentage = 100 * (wins / spins)
             print("\nWin%: " + str(round(win_percentage, 2)) + "%")
@@ -342,7 +416,8 @@ def display_home_screen():
             print("\nWin%: N/A")
         print("Reward Multiplier:", round(reward_multiplier, 2))
         print("Luck:", luck)
-        print("Streak Multiplier:", round(streak_multiplier, 1))
+        print("Streak Multiplier:", round(streak_multiplier, 1), "\n")
+        print(("-" * 20))
         if has_insurance:
             if insurance_type == 1:
                 plan = "Starter Plan"
@@ -358,6 +433,11 @@ def display_home_screen():
 
             print(
                 f"\nInsurance Information:\n- Plan: {plan}\n- Payment: {insurance_payment} credits/day\n- Coverage: {insurance_coverage}%")
+            print(("-" * 20))
+
+        print(f"\n{pick_flavor_text()}\n")
+
+        print(("-" * 20))
 
         if spins < 100:
             menu = input(
@@ -533,13 +613,22 @@ NOTE: All plans require a down payment equal to 10 times their starting rate
 
 # Handle the in-game shop for upgrades
 def visit_shop():
-    global reward_multiplier, luck, luck_upgrade_price, reward_upgrade_price, streak_multiplier, streak_upgrade_price, player_credits, speed_upgrade_price, speed_upgrades, total_spent_in_shop, achievements
+    global reward_multiplier, luck, luck_upgrade_price, reward_upgrade_price, streak_multiplier, streak_upgrade_price, player_credits, speed_upgrade_price, speed_upgrades, total_spent_in_shop, achievements, bonus_achievements, bar_actions, bar_dialogue, bar_dialogue_count
     clear_screen()
 
     s = player_credits
 
     print("Welcome to the bar!")
-    print(f"Credits: {player_credits:,}")
+    dialogue = random.randint(0,5)
+    if dialogue == 0:
+        print(f"{bar_actions[0]}{bar_dialogue[bar_dialogue_count]}")
+        bar_dialogue_count += 1
+        if bar_dialogue_count == len(bar_dialogue):
+            bar_dialogue_count = 0
+    else:
+        print(bar_actions[dialogue])
+
+    print(f"\nCredits: {player_credits:,}")
     print(f"""
     -- MENU --
     Beer: +5% Reward Multiplier (Cost: {reward_upgrade_price})
@@ -728,14 +817,23 @@ input("")
 
 while is_running:
     achievements_start = {}
+    bonus_achievements_start = {}
 
     for i in achievements.keys():
         achievements_start.update({i: achievements[i]})
+    for i in bonus_achievements.keys():
+        bonus_achievements_start.update({i: bonus_achievements[i]})
 
     a_before = 0
     for i in achievements.keys():
         if achievements[i]:
             a_before += 1
+
+    b_before = 0
+    for i in bonus_achievements.keys():
+        if bonus_achievements[i]:
+            b_before += 1
+    
     clear_screen()
     if player_credits < 0:
         player_credits = 0
@@ -874,7 +972,38 @@ while is_running:
                     l.append(i)
                 for i in l:
                     name += f"{i.capitalize()} "
-                print("You unlocked the achievement:", name)
+                print("Achievement Unlocked:", name)
+
+    # BONUS Achievements
+    has_unlocked_bonus_achievement = False
+    b = 0
+    for i in bonus_achievements.keys():
+        if bonus_achievements[i]:
+            b += 1
+
+    if b > b_before:
+        has_unlocked_bonus_achievement = True
+
+    if has_unlocked_bonus_achievement:
+        # find newly unlocked achievements
+        b = []
+        for i in bonus_achievements.keys():
+            if (bonus_achievements[i]) != (bonus_achievements_start[i]):
+                b.append(i)
+
+        # display achievements
+        if b != []:
+            for i in b:
+                no_spaces = i.replace("_", " ")
+                l = []
+                name = ""
+                for i in no_spaces.split():
+                    i.capitalize()
+                    l.append(i)
+                for i in l:
+                    name += f"{i.capitalize()} "
+                print("Bonus Achievement Unlocked:", name)
+
         input("\n[ENTER] to continue\n")
 
     if player_credits <= 0:

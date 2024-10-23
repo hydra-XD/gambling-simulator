@@ -2,10 +2,13 @@
 
 ## v1.10 (WIP)
 
+- 1000 Lines!!!
 - Bugfixes
 - Added the ability to borrow from your spouse
 - Fixed some achievements
 - More Bugfixes
+- Bonus Achievement system
+- Flavor text & Dialogue!!!
 
 ## v1.9
 
