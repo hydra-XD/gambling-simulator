@@ -162,11 +162,13 @@ bar_actions = [
     "The bartender isn't in. There's a woman at the counter who eyes you with an emotion you can't decipher."
 ]
 
+"""
 def dump_state():
     dill.dump_session(filename="session.pkl")
 
 def restore_state():
     dill.
+"""
 
 def pick_flavor_text():
     global spins, flavor_text
