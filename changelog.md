@@ -9,6 +9,7 @@
 - More Bugfixes
 - Bonus Achievement system
 - Flavor text & Dialogue!!!
+- A lot of stuff
 
 ## v1.9
 
