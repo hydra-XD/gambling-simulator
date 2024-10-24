@@ -145,11 +145,11 @@ bar_dialogue = [
     '"What\'s new?"',
     '"Every day\'s a good day to get drunk."',
     '"How\'re the kids?"',
-    '"My husband says I need to get a real job"',
+    '"My husband says I need to get a real job."',
     '"Rough day, huh?"',
-    '"Here, have a beer on me"',
+    '"Here, have a beer on me."',
     '"Kids these days..."',
-    '"Went to college for physics, why am I here?"'
+    '"Went to college for physics, why am I here?"',
     '"Everyone leaves eventually. Will you?"',
 ]
 
@@ -777,10 +777,10 @@ def borrow_from_spouse():
     borrow_amount = (spins * 1000)
     if spouse == "husband":
         print(
-            f"You break away from the machine to call your husband. He says that he'll let you have {'{:,}'.format(borrow_amount)} credits, but if you lose with them he'll leave you. Take his deal?")
+            f"You break away from the machine to call your husband. He says that he'll let you have {borrow_amount:,} credits, but if you lose with them he'll leave you. Take his deal?")
     if spouse == "wife":
         print(
-            f"You break away from the machine to call your wife. She says that she'll let you have {'{:,}'.format(borrow_amount)} credits, but if you lose with them she'll leave you. Take her deal?")
+            f"You break away from the machine to call your wife. She says that she'll let you have {borrow_amount:,} credits, but if you lose with them she'll leave you. Take her deal?")
 
     option = input("(y/n) >> ")
 
@@ -807,12 +807,12 @@ def game_over(source):
         end_text_1 = "\nYou are broke :(\nYou lost your house\nYou lost your wife\nShe took the kids\n\n\nWas it worth it?"
         end_text_2 = "\nYou made it out!\nYour wife is waiting outside for you.\nShe hugs you and says, \"I'm glad you're back.\""
         end_text_3 = "\nYou made it out!\nYour wife is waiting outside for you.\nShe hands you a stack of papers\nShe says, \"I want a divorce.\""
-        end_text_4 = "You lost the money your wife gave you! She calls, but you're too ashamed to pick up. You know it's over."
+        end_text_4 = "\nYou lost the money your wife gave you! She calls, but you're too ashamed to pick up. You know it's over."
     if spouse == "husband":
         end_text_1 = "\nYou are broke :(\nYou lost your house\nYou lost your husband\nHe took the kids\n\n\nWas it worth it?"
         end_text_2 = "\nYou made it out!\nYour husband is waiting outside for you.\nHe hugs you and says, \"I'm glad you're back.\""
         end_text_3 = "\nYou made it out!\nYour husband is waiting outside for you.\nHe hands you a stack of papers\nHe says, \"I want a divorce.\""
-        end_text_4 = "You lost the money your husband gave you! He calls, but you're too ashamed to pick up. You know it's over."
+        end_text_4 = "\nYou lost the money your husband gave you! He calls, but you're too ashamed to pick up. You know it's over."
     if source == 0:  # bankruptcy
         print(end_text_1)
     elif source == 1:  # loan payment
@@ -991,26 +991,6 @@ while is_running:
     if a > a_before:
         has_unlocked_achievement = True
 
-    if has_unlocked_achievement:
-        # find newly unlocked achievements
-        a = []
-        for i in achievements.keys():
-            if (achievements[i]) != (achievements_start[i]):
-                a.append(i)
-
-        # display achievements
-        if a != []:
-            for i in a:
-                no_spaces = i.replace("_", " ")
-                l = []
-                name = ""
-                for i in no_spaces.split():
-                    i.capitalize()
-                    l.append(i)
-                for i in l:
-                    name += f"{i.capitalize()} "
-                print("Achievement Unlocked:", name)
-
     # BONUS Achievements
     has_unlocked_bonus_achievement = False
     b = 0
@@ -1021,25 +1001,45 @@ while is_running:
     if b > b_before:
         has_unlocked_bonus_achievement = True
 
-    if has_unlocked_bonus_achievement:
-        # find newly unlocked achievements
-        b = []
-        for i in bonus_achievements.keys():
-            if (bonus_achievements[i]) != (bonus_achievements_start[i]):
-                b.append(i)
+    if has_unlocked_achievement or has_unlocked_bonus_achievement:
+        if has_unlocked_achievement:
+            # find newly unlocked achievements
+            a = []
+            for i in achievements.keys():
+                if (achievements[i]) != (achievements_start[i]):
+                    a.append(i)
 
-        # display achievements
-        if b != []:
-            for i in b:
-                no_spaces = i.replace("_", " ")
-                l = []
-                name = ""
-                for i in no_spaces.split():
-                    i.capitalize()
-                    l.append(i)
-                for i in l:
-                    name += f"{i.capitalize()} "
-                print("Bonus Achievement Unlocked:", name)
+            # display achievements
+            if a != []:
+                for i in a:
+                    no_spaces = i.replace("_", " ")
+                    l = []
+                    name = ""
+                    for i in no_spaces.split():
+                        i.capitalize()
+                        l.append(i)
+                    for i in l:
+                        name += f"{i.capitalize()} "
+                    print("Achievement Unlocked:", name)
+        if has_unlocked_bonus_achievement:
+            # find newly unlocked achievements
+            b = []
+            for i in bonus_achievements.keys():
+                if (bonus_achievements[i]) != (bonus_achievements_start[i]):
+                    b.append(i)
+
+            # display achievements
+            if b != []:
+                for i in b:
+                    no_spaces = i.replace("_", " ")
+                    l = []
+                    name = ""
+                    for i in no_spaces.split():
+                        i.capitalize()
+                        l.append(i)
+                    for i in l:
+                        name += f"{i.capitalize()} "
+                    print("Bonus Achievement Unlocked:", name)
 
         input("\n[ENTER] to continue\n")
 
