@@ -5,7 +5,7 @@ import os
 import dill
 
 # Debug
-IS_DEV_BUILD = True
+IS_DEV_BUILD = False
 IS_LOADED_SAVE = False
 console_used = False
 suppress = False
@@ -169,7 +169,7 @@ def dump_state(filename):
 
 def restore_state(filename):
     dill.load_session(filename)
-    IS_LOADED_SAVE = False
+    IS_LOADED_SAVE = True
 
 
 def pick_flavor_text():
@@ -236,6 +236,8 @@ def calculate_achievements():
         achievements["what_year_is_it"] = True
 
     if console_used == True:
+        bonus_achievements["counting_cards"] = True
+    if IS_LOADED_SAVE == True:
         bonus_achievements["counting_cards"] = True
         
     b = 0
