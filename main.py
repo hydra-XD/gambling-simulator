@@ -6,6 +6,7 @@ import dill
 
 # Debug
 IS_DEV_BUILD = True
+IS_LOADED_SAVE = False
 console_used = False
 suppress = False
 
@@ -168,6 +169,7 @@ def dump_state(filename):
 
 def restore_state(filename):
     dill.load_session(filename)
+    IS_LOADED_SAVE = False
 
 
 def pick_flavor_text():
@@ -407,10 +409,18 @@ def devtools():
             submenu = input(">> ")
             if submenu == "save":
                 f = input(">> ")
-                dump_state(f)
+                if ".pkl" in f:
+                    dump_state(f)
+                else: 
+                    f = f"{f}.pkl"
+                    dump_state(f)
             elif submenu == "load":
                 f = input(">> ")
-                restore_state(f)
+                if ".pkl" in f:
+                    restore_state(f)
+                else: 
+                    f = f"{f}.pkl"
+                    restore_state(f)
             elif submenu == "bonus":
                 while True:
                     try:
@@ -441,6 +451,7 @@ def display_home_screen():
     while True:
         clear_screen()
         print(f"Credits: {player_credits:,}")
+        print("")
         print(("-" * 20))
         try:
             win_percentage = 100 * (wins / spins)
@@ -850,7 +861,15 @@ if IS_DEV_BUILD:
         "Welcome to Gambling Simulator dev-1.10!\nThis is a developer build and may be unfinished or broken.\n\nPress [ENTER] to continue")
 else:
     print("Welcome to Gambling Simulator v1.10!\n\nPress [ENTER] to continue")
-input("")
+m = input("")
+
+if m[:4] == "load":
+    try:
+        n = (f"{m[5:]}.pkl") if ".pkl" not in m[5:] else m[5:]
+        restore_state(n)
+    except:
+        pass
+else: pass
 
 while is_running:
     achievements_start = {}
