@@ -111,9 +111,9 @@ achievements = {
 
 # bonus achievements
 bonus_achievements = {
-    "counting_cards": False, # use the devtools
-    "extra_zesty": False, # see all flavor text
-    "regular_patron": False,  # have every conversation with the bartender
+    "counting_cards": False, # use the devtools #
+    "extra_zesty": False, # see all flavor text #
+    "regular_patron": False,  # have every conversation with the bartender #
 }
 
 # Bonus and letter options
@@ -657,6 +657,7 @@ def visit_shop():
         print(f"{bar_actions[0]}{bar_dialogue[bar_dialogue_count]}")
         bar_dialogue_count += 1
         if bar_dialogue_count == len(bar_dialogue):
+            bonus_achievements["regular_patron"] = True
             bar_dialogue_count = 0
     else:
         print(bar_actions[dialogue])
