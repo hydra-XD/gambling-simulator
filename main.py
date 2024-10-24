@@ -113,7 +113,7 @@ achievements = {
 bonus_achievements = {
     "counting_cards": False, # use the devtools #
     "extra_zesty": False, # see all flavor text #
-    "regular_patron": False,  # have every conversation with the bartender #
+    "regular_patron": False  # have every conversation with the bartender #
 }
 
 # Bonus and letter options
@@ -150,7 +150,7 @@ bar_dialogue = [
     '"Here, have a beer on me."',
     '"Kids these days..."',
     '"Went to college for physics, why am I here?"',
-    '"Everyone leaves eventually. Will you?"',
+    '"Everyone leaves eventually. Will you?"'
 ]
 
 bar_actions = [
