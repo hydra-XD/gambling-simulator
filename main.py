@@ -2,11 +2,8 @@ import random
 import time
 import os
 
-import dill
-
 # Debug
 IS_DEV_BUILD = False
-IS_LOADED_SAVE = False
 console_used = False
 suppress = False
 
@@ -164,14 +161,6 @@ bar_actions = [
 ]
 
 
-def dump_state(filename):
-    dill.dump_session(filename=filename)
-
-def restore_state(filename):
-    dill.load_session(filename)
-    IS_LOADED_SAVE = True
-
-
 def pick_flavor_text():
     global spins, flavor_text
     for f in flavor_text:
@@ -236,8 +225,6 @@ def calculate_achievements():
         achievements["what_year_is_it"] = True
 
     if console_used == True:
-        bonus_achievements["counting_cards"] = True
-    if IS_LOADED_SAVE == True:
         bonus_achievements["counting_cards"] = True
         
     b = 0
@@ -381,7 +368,6 @@ def devtools():
 
             globals()[variable] = value
             print(f"{variable} is now set to {globals()[variable]}")
-
         if menu == "function":
             while True:
                 try:
@@ -407,38 +393,25 @@ def devtools():
                 except:
                     print(f"Achievement '{achievement_name}' not found")
                     break
+        if menu == "bonus":
+            while True:
+                try:
+                    achievement_name = input("Enter achievement name\n>> ")
+                    menu = input(f"{achievement_name} is currently set to {bonus_achievements[achievement_name]}. Press [ENTER] to toggle it or 'cancel' to go back\n>> ")
+                    if menu != "cancel":
+                        if bonus_achievements[achievement_name]:
+                            bonus_achievements[achievement_name] = False
+                        elif not bonus_achievements[achievement_name]:
+                            bonus_achievements[achievement_name] = True
+                        print(
+                            f"{achievement_name} is now set to {bonus_achievements[achievement_name]}")
+                        break
+                except:
+                    print(f"Achievement '{achievement_name}' not found")
+                    break
         if menu == "misc":
             submenu = input(">> ")
-            if submenu == "save":
-                f = input(">> ")
-                if ".pkl" in f:
-                    dump_state(f)
-                else: 
-                    f = f"{f}.pkl"
-                    dump_state(f)
-            elif submenu == "load":
-                f = input(">> ")
-                if ".pkl" in f:
-                    restore_state(f)
-                else: 
-                    f = f"{f}.pkl"
-                    restore_state(f)
-            elif submenu == "bonus":
-                while True:
-                    try:
-                        achievement_name = input("Enter achievement name\n>> ")
-                        menu = input(f"{achievement_name} is currently set to {bonus_achievements[achievement_name]}. Press [ENTER] to toggle it or 'cancel' to go back\n>> ")
-                        if menu != "cancel":
-                            if bonus_achievements[achievement_name]:
-                                bonus_achievements[achievement_name] = False
-                            elif not bonus_achievements[achievement_name]:
-                                bonus_achievements[achievement_name] = True
-                            print(
-                                f"{achievement_name} is now set to {bonus_achievements[achievement_name]}")
-                            break
-                    except:
-                        print(f"Achievement '{achievement_name}' not found")
-                        break
+            
         if menu == "pass":
             clear_screen()
             break
@@ -864,14 +837,6 @@ if IS_DEV_BUILD:
 else:
     print("Welcome to Gambling Simulator v1.10!\n\nPress [ENTER] to continue")
 m = input("")
-
-if m[:4] == "load":
-    try:
-        n = (f"{m[5:]}.pkl") if ".pkl" not in m[5:] else m[5:]
-        restore_state(n)
-    except:
-        pass
-else: pass
 
 while is_running:
     achievements_start = {}
