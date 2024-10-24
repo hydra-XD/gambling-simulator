@@ -1,6 +1,6 @@
 # Gambling Simulator Changelog
 
-## v1.10 (WIP)
+## v1.10 (The Bonus Update)
 
 - 1000 Lines!!!
 - Bugfixes
@@ -17,7 +17,7 @@
 - Under-the-hood improvements
 - Some secrets
 
-## v1.8
+## v1.8 (The Achievement Update)
 
 - Added Achievements
 - 700 lines of code!
@@ -36,7 +36,7 @@
 
 - Reworked Insurance and Loans
 
-## v1.5
+## v1.5 (The Insurance Update)
 
 - Lowered Interest Rate
 - Added Insurance and the Insurance Shop
@@ -48,7 +48,7 @@
 - Bugfixes
 - Lowered Interest Rate
 
-## v1.3
+## v1.3 (The Bank Update)
 
 - Added Bank
 
@@ -57,7 +57,7 @@
 - Bugfixes
 - Improved Multiplier
 
-## v1.1
+## v1.1 (The Commerce Update)
 
 - Added Shop
 - Added Win Streak
@@ -66,6 +66,6 @@
 - Rebalanced Spin Mechanics
 - Added Changelog
 
-## v1.0
+## v1.0 (First Release)
 
 - Released Gambling Simulator
