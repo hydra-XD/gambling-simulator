@@ -832,8 +832,7 @@ def game_over(source):
 
 clear_screen()
 if IS_DEV_BUILD:
-    print(
-        "Welcome to Gambling Simulator dev-1.10!\nThis is a developer build and may be unfinished or broken.\n\nPress [ENTER] to continue")
+    print("Welcome to Gambling Simulator dev-1.10!\nThis is a developer build and may be unfinished or broken.\n\nPress [ENTER] to continue")
 else:
     print("Welcome to Gambling Simulator v1.10!\n\nPress [ENTER] to continue")
 m = input("")
