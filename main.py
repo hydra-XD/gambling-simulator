@@ -95,11 +95,11 @@ achievements = {
     "still_hanging_in_there": False,  # take out another loan #
     "redemption_arc": False,  # pay back your third loan #
 
-    "overload": False,  # max out energy drinks #
     "i_feel_funny": False,  # first shop purchase #
     "big_spender": False,  # spend 1,000 credits in the shop #
     "i'll_have_the_regular": False,  # spend 10,000 credits in the shop #
     "writing_checks_left_and_right": False,  # spend 100,000 credits in the shop #
+    "overload": False,  # max out energy drinks #
 
     "insured": False,  # purchase an insurance plan #
     "volatile": False,  # make your insurance rate rise #
@@ -116,7 +116,9 @@ achievements = {
 bonus_achievements = {
     "counting_cards": False, # use the devtools #
     "extra_zesty": False, # see all flavor text #
-    "regular_patron": False  # have every conversation with the bartender #
+    "regular_patron": False,  # have every conversation with the bartender #
+    "back_from_the_brink": False,  # win the deal #
+    "last_resort": False  # sell a kidney #
 }
 
 # Bonus and letter options
@@ -280,11 +282,11 @@ You've Unlocked [{a}/{len(achievements)}] Achievements ({p}%) {"(Cheats used)" i
     [{"x" if achievements["still_hanging_in_there"] else " "}] Still Hanging in There (Take out another loan) 
     [{"x" if achievements["redemption_arc"] else " "}] Redemption Arc (Pay back three loans)
 
-    [{"x" if achievements["overload"] else " "}] Overload (Max out on energy drinks)
     [{"x" if achievements["i_feel_funny"] else " "}] I Feel Funny (Buy from the bar)
     [{"x" if achievements["big_spender"] else " "}] Big Spender (Spend 1,000 credits at the bar)
     [{"x" if achievements["i'll_have_the_regular"] else " "}] I'll Have the Regular (Spend 10,000 credits at the bar)
     [{"x" if achievements["writing_checks_left_and_right"] else " "}] Writing Checks Left and Right (Spend 100,000 credits at the bar)
+    [{"x" if achievements["overload"] else " "}] Overload (Max out on energy drinks)
 
     [{"x" if achievements["insured"] else " "}] Insured (Purchase an insurance plan)
     [{"x" if achievements["volatile"] else " "}] Volatile (Make your insurance rate rise)
@@ -312,6 +314,10 @@ You've Unlocked [{a}/{len(achievements)}] Achievements ({p}%) {"(Cheats used)" i
             print("    [x] Extra Zesty (See all flavor texts on the home screen)")
         if bonus_achievements["regular_patron"]:
             print("    [x] Regular Patron (See all Bartender dialogues)")
+        if bonus_achievements["back_from_the_brink"]:
+            print("    [x] Back from the Brink (Win 'The Deal')")
+        if bonus_achievements["last_resort"]:
+            print("    [x] Last Resort (Sell your kidney)")    
 
 
 def get_variable_type(var):
@@ -992,15 +998,17 @@ def sell_kidney():
     print(f"You decide to sell your {kidney} kidney to continue gambling.")
     print(f"You manage to get {kidney_value:,} credits for it.")
     print(f"After {days_out} days in the hospital, you're back on your feet, itching for more gambling.")
-    input("Press [ENTER] to continue.")
+    input("Press [ENTER] to continue.\n")
     
     spins += days_out
     player_credits += kidney_value
     kidneys = 1
+    bonus_achievements["last_resort"] = True
 
 
 def borrow_from_spouse():
     global has_borrowed, has_borrow, player_credits
+    clear_screen()
     borrow_amount = (spins * 1000)
     if spouse == "husband":
         print(
@@ -1011,13 +1019,14 @@ def borrow_from_spouse():
 
     option = input("(y/n) >> ")
 
-    if option.lower() == "y" or "":
+    if option.lower() in ["", "y"]:
         if spouse == "husband":
             print("You take his money, determined to win it all.")
         if spouse == "wife":
             print("You take her money, determined to win it all.")
-        has_borrowed = True
+        has_borrow = True
         player_credits = borrow_amount
+        return
     else:
         print("You hang up and decide to go to the bank instead.")
         has_borrowed = True
@@ -1026,6 +1035,7 @@ def borrow_from_spouse():
 
 def game_over(source):
     global spins, spouse, achievements
+    clear_screen()
     # end text conditions
 
     print(f"After {spins} days...")
@@ -1076,7 +1086,7 @@ def game_over(source):
 
 clear_screen()
 if IS_DEV_BUILD:
-    print("Welcome to Gambling Simulator dev-1.10!\nThis is a developer build and may be unfinished or broken.\n\nPress [ENTER] to continue")
+    print("Welcome to Gambling Simulator dev-1.11!\nThis is a developer build and may be unfinished or broken.\n\nPress [ENTER] to continue")
 else:
     print("Welcome to Gambling Simulator v1.10!\n\nPress [ENTER] to continue")
 m = input("")
@@ -1114,16 +1124,12 @@ while is_running:
         days_passed += 1
     if player_credits <= 0:
         if not has_loan:
-            if not has_borrowed and spins >= 50 and kidneys == 2:
-                print(
-                    f"You have no credits. Type 'bank' to visit the bank, 'borrow' to borrow money from your {spouse}, or 'kidney' to sell a kidney.")
-            elif not has_borrowed and spins >= 10 and kidneys == 1:
-                print(
-                    f"You have no credits. Type 'bank' to visit the bank or 'borrow' to borrow money from your {spouse}.")
-            elif has_borrowed and spins >= 50 and kidneys == 2:
-                print("You have no credits. Type 'bank' to visit the bank or 'kidney' to sell a kidney.")
-            else:
-                print("You have no credits. Type 'bank' to visit the bank.")
+            print(f"You have no credits. Choose an option:")
+            print("    'bank' to visit the bank")
+            if not has_borrowed and spins >= 10:
+                print(f"    'borrow' to borrow from your {spouse}")
+            if kidneys == 2 and spins >= 50:
+                print("    'kidney' to sell a kidney")
             option = input(">> ")
             if option == "bank":
                 visit_bank()
@@ -1172,8 +1178,10 @@ while is_running:
     reward = calculate_reward(spin_result, bet)
 
     if reward > 0:
-        has_borrow = False
-        has_borrowed = True
+        if has_borrow:
+            bonus_achievements["back_from_the_brink"] = True
+            has_borrow = False
+            has_borrowed = True
         print("Reward:", reward)
         if bet == player_credits:
             achievements["i_can't_stop_winning"] = True
@@ -1290,9 +1298,9 @@ while is_running:
         while True:
             clear_screen()
             if not is_high_roller:
-                print("Type 'shop' to visit the shop, 'insurance' to buy insurance, or pass to leave")
+                print("Type 'shop' to visit the shop, 'insurance' to buy insurance, or 'pass' to leave")
             else:
-                print("Type 'shop' to visit the shop, 'insurance' to buy insurance, 'high roller' to visit the High Rollers club, or pass to leave")
+                print("Type 'shop' to visit the shop, 'insurance' to buy insurance, 'high roller' to visit the High Rollers club, or 'pass' to leave")
             in_ = input(">> ")
             if in_ == "shop":
                 visit_shop()
