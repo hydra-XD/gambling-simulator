@@ -16,6 +16,11 @@ streak = 0
 jackpots = 0
 total_won = 0
 total_lost = 0
+
+# Misc
+kidneys = 2
+is_high_roller = False
+roulette_chips = 0
 spouse = "wife"
 cake = "thecakeisalie"
 
@@ -629,9 +634,221 @@ NOTE: All plans require a down payment equal to 10 times their starting rate
     print("\nThank you for your business!\n\n[ENTER] to continue")
     input("")
 
+def roulette_spin():
+    color = "none"
+    number = str(random.randint(0, 37))
+    if number == "37":
+        number = "00"
+    if int(number) % 2 == 0:
+        color = "red"
+    if number == "0" or number == "00":
+        color = "green"
+    else:
+        color = "black"
+    return color, number
+    
+
+def get_roulette_reward(bet_type, x, bet_amount, color, number):
+    if bet_type == "single":
+        if bet_amount == int(number):
+            return bet_amount * 35 + bet_amount
+        else:
+            return 0
+    if bet_type == "column":
+        if int(number) in x:
+            return (bet_amount * 2) + bet_amount
+        else:
+            return 0
+    if bet_type == "dozen":
+        if int(number) in x:
+            return bet_amount * 2 + bet_amount
+        else:
+            return 0
+    if bet_type == "red":
+        if int(number) in reds:
+            return bet_amount * 2
+        else:
+            return 0
+    if bet_type == "black":
+        if int(number) in blacks:
+            return bet_amount * 2
+        else:
+            return 0
+    if bet_type == "low":
+        if int(number) in low:
+            return bet_amount * 2
+        else:
+            return 0
+    if bet_type == "high":
+        if int(number) in high:
+            return bet_amount * 2
+        else:
+            return 0
+    if bet_type == "odd":
+        if int(number) % 2 != 0:
+            return bet_amount * 2
+        else:
+            return 0
+    if bet_type == "even":
+        if int(number) % 2 == 0:
+            return bet_amount * 2
+        else:
+            return 0
+
+def play_roulette():
+    global roulette_chips
+    # Roulette Wheel
+    dozen_one = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+    dozen_two = [13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
+    dozen_three = [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36]
+
+    column_one = [1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31, 34]
+    column_two = [2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35]
+    column_three = [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36]
+
+    low = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
+    high = [19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36]
+
+    reds = [1, 3, 5, 7, 9, 12, 14, 16, 18, 21, 23, 25, 27, 28, 30, 32, 34, 36]  
+    blacks = [a if a not in reds else None for a in range(1, 37)]
+
+    while True:
+        clear_screen()
+        print(f"""
+Chips: {roulette_chips}
+
+Bet on a category of numbers.
+A number from 1 to 36 (plus 0 and 00) is chosen
+If your category is chosen, you win!
+
+- [[Bet Types]] -
+Odd             (Odd numbers)
+Even            (Even numbers)
+Black           (Black numbers)
+Red             (Red numbers)
+Low             (1-18)
+High            (19-36)
+Column One      (1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31, 34)
+Column Two      (2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35)
+Column Three    (3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36)
+Dozen One       (1-12)
+Dozen Two       (13-24)
+Dozen Three     (25-36)
+""")
+        bet_type = input("\nBet Type: ").lower()
+        if bet_type == "column one":
+            x = column_one
+        if bet_type == "column two":
+            x = column_two
+        if bet_type == "column three":
+            x = column_three
+        if bet_type == "dozen one":
+            x = dozen_one
+        if bet_type == "dozen two":
+            x = dozen_two
+        if bet_type == "dozen three":
+            x = dozen_three
+        if bet_type == "low":
+            x = low
+        if bet_type == "high":
+            x = high
+        if bet_type == "red":
+            x = reds
+        if bet_type == "black":
+            x = blacks
+        if bet_type == "odd":
+            x = [a if a % 2 != 0 else None for a in range(1, 37)]
+        if bet_type == "even":
+            x = [a if a % 2 == 0 else None for a in range(1, 37)]
+
+        while True:
+            bet_amount = int(input("Bet Amount: "))
+
+            if bet_amount <= 0 or bet_amount > roulette_chips:
+                print("Enter a non-zero number of chips that you can afford.")
+
+            roulette_chips -= bet_amount
+
+        clear_screen()
+
+        color, number = roulette_spin()
+        print("Spin: " + color.title() + " " + number)
+
+        reward = get_roulette_reward(bet_type, x, bet_amount, color, number)
+        roulette_chips += reward
+
+        print("Reward: " + str(reward))
+        print("Chips: " + str(roulette_chips))
+
+        menu = input("'leave' to leave or [ENTER] to continue")
+
+        clear_screen()
+
+        if menu == "leave":
+            clear_screen()
+            break
+
+        if roulette_chips <= 0:
+            clear_screen()
+            print("You have run out of roulette chips.")
+            break
+
 
 def high_rollers():
-    global player_credits
+    global player_credits, is_high_roller, luck, roulette_chips
+
+    clear_screen()
+
+    if not is_high_roller:
+        print("You don't have a membership card. \nThe bouncer turns you away.")
+        input("\n[ENTER] to continue\n")
+        return
+
+    while True:  
+        clear_screen()
+        print("Welcome to the High Rollers club")
+        print(f"You have {roulette_chips} chips")
+        menu = input("\ntype 'chips' to buy more chips, 'credits' to cash in chips, or 'spin' to play roulette. 'pass' to leave\n>> ")
+        if menu == "chips":
+            clear_screen()
+            print("\nExchange rate: 1 Chip for 5 Credits")
+            while True:
+                amount = input("Enter an amount of chips to buy. 'pass' to leave\n>> ")
+                if amount == "pass" or (amount.isnumeric() and int(amount) > 0):
+                    pass
+                else:
+                    print("Enter a non-zero numeric value or 'pass'")
+                    continue
+                if amount == "pass": break
+                else:
+                    amount = round(int(amount))
+                    if amount * 5 > player_credits:
+                        print("You can't afford that many chips!")
+                        continue
+                    else:
+                        player_credits -= amount * 5
+                        roulette_chips += amount
+        elif menu == "spin":
+            clear_screen()
+            play_roulette()
+        elif menu == "credits":
+            clear_screen()
+            while True:
+                amount = input("Enter an amount of chips to cash in. 'pass' to leave\n>> ")
+                if amount == "pass" or (amount.isnumeric() and int(amount) > 0):
+                    pass
+                else:
+                    print("Enter a non-zero numeric value or 'pass'")
+                    continue
+                if amount == "pass": break
+                else:
+                    amount = round(int(amount))
+                    if amount > roulette_chips:
+                        print("You can't afford that many chips!")
+                        continue
+                    else:
+                        player_credits += round(amount / 5)
+                        roulette_chips -= amount
 
 # Handle the in-game shop for upgrades
 def visit_shop():
@@ -706,6 +923,8 @@ def visit_shop():
                 speed_upgrades += 1
                 break
     total_spent_in_shop = (s - player_credits)
+    if purchase in ["beer", "fries", "hot dog", "energy drink"] and kidneys == 1:
+        game_over(4)
 
 
 # visit the in-game bank
@@ -740,9 +959,9 @@ def visit_bank():
                     achievements["still_hanging_in_there"] = True
 
                 print(
-                    f"You took out a loan of {amount:,} credits\nBe prepared to pay it back in three days")
+                    f"You took out a loan of {amount:,} credits\nBe prepared to pay it back in three days.")
                 input("\nPress [ENTER] to continue\n")
-                break
+                return
     else:
         print(
             f"Time to pay your loan back.\nYour loan payment is {loan_payment:,} credits")
@@ -761,6 +980,25 @@ def visit_bank():
             player_credits = 0
 
 
+def sell_kidney():
+    global kidneys, player_credits, spins
+    kidney_value = 75000 + random.randint(-2000,2000)
+    if random.randint(1,2) == 1:
+        kidney = "right"
+    else:
+        kidney = "left"
+    days_out = random.randint(5,10)
+    clear_screen()
+    print(f"You decide to sell your {kidney} kidney to continue gambling.")
+    print(f"You manage to get {kidney_value:,} credits for it.")
+    print(f"After {days_out} days in the hospital, you're back on your feet, itching for more gambling.")
+    input("Press [ENTER] to continue.")
+    
+    spins += days_out
+    player_credits += kidney_value
+    kidneys = 1
+
+
 def borrow_from_spouse():
     global has_borrowed, has_borrow, player_credits
     borrow_amount = (spins * 1000)
@@ -773,7 +1011,7 @@ def borrow_from_spouse():
 
     option = input("(y/n) >> ")
 
-    if option.lower() == "y":
+    if option.lower() == "y" or "":
         if spouse == "husband":
             print("You take his money, determined to win it all.")
         if spouse == "wife":
@@ -802,6 +1040,7 @@ def game_over(source):
         end_text_2 = "\nYou made it out!\nYour husband is waiting outside for you.\nHe hugs you and says, \"I'm glad you're back.\""
         end_text_3 = "\nYou made it out!\nYour husband is waiting outside for you.\nHe hands you a stack of papers\nHe says, \"I want a divorce.\""
         end_text_4 = "\nYou lost the money your husband gave you! He calls, but you're too ashamed to pick up. You know it's over."
+    end_text_5 = "Unfortunately, your reduced number of kidneys couldn't handle your diet, and you have perished."
     if source == 0:  # bankruptcy
         print(end_text_1)
     elif source == 1:  # loan payment
@@ -827,6 +1066,8 @@ def game_over(source):
             print(end_text_3)
     elif source == 3:  # Failed lifeline
         print(end_text_4)
+    elif source == 4: #kidney
+        print(end_text_5)
 
     display_achievements()
     while True:
@@ -873,18 +1114,25 @@ while is_running:
         days_passed += 1
     if player_credits <= 0:
         if not has_loan:
-            if not has_borrowed and spins >= 10:
+            if not has_borrowed and spins >= 50 and kidneys == 2:
+                print(
+                    f"You have no credits. Type 'bank' to visit the bank, 'borrow' to borrow money from your {spouse}, or 'kidney' to sell a kidney.")
+            elif not has_borrowed and spins >= 10 and kidneys == 1:
                 print(
                     f"You have no credits. Type 'bank' to visit the bank or 'borrow' to borrow money from your {spouse}.")
+            elif has_borrowed and spins >= 50 and kidneys == 2:
+                print("You have no credits. Type 'bank' to visit the bank or 'kidney' to sell a kidney.")
             else:
                 print("You have no credits. Type 'bank' to visit the bank.")
-
             option = input(">> ")
             if option == "bank":
                 visit_bank()
-            elif not has_borrowed and spins >= 10:
+            if not has_borrowed and spins >= 10:
                 if option == "borrow":
                     borrow_from_spouse()
+            if kidneys == 2 and spins >= 50:
+                if option == "kidney":
+                    sell_kidney()
             else:
                 game_over(0)
         else:
@@ -1031,13 +1279,20 @@ while is_running:
 
         input("\n[ENTER] to continue\n")
 
+    if total_won >= 50000 and not is_high_roller:
+            is_high_roller = True
+            print("You can now visit the High Rollers club!")
+            input("\n[ENTER] to continue\n")
+
     if player_credits <= 0:
         pass
     else:
         while True:
             clear_screen()
-            print(
-                "Type 'shop' to visit the shop, 'insurance' to buy insurance, or pass to leave")
+            if not is_high_roller:
+                print("Type 'shop' to visit the shop, 'insurance' to buy insurance, or pass to leave")
+            else:
+                print("Type 'shop' to visit the shop, 'insurance' to buy insurance, 'high roller' to visit the High Rollers club, or pass to leave")
             in_ = input(">> ")
             if in_ == "shop":
                 visit_shop()
@@ -1045,6 +1300,8 @@ while is_running:
             if in_ == "insurance":
                 insurance_shop()
                 break
+            if in_ == "high roller":
+                high_rollers()
             if in_ == "pass":
                 break
     clear_screen()
