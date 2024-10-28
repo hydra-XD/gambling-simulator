@@ -3,7 +3,7 @@ import time
 import os
 
 # Debug
-IS_DEV_BUILD = False
+IS_DEV_BUILD = True
 console_used = False
 suppress = False
 
@@ -629,6 +629,9 @@ NOTE: All plans require a down payment equal to 10 times their starting rate
     print("\nThank you for your business!\n\n[ENTER] to continue")
     input("")
 
+
+def high_rollers():
+    global player_credits
 
 # Handle the in-game shop for upgrades
 def visit_shop():
