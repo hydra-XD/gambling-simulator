@@ -1,6 +1,7 @@
 import random
 import time
 import os
+import types
 
 # Debug
 IS_DEV_BUILD = True
@@ -69,7 +70,7 @@ loans_paid = 0
 # Borrowing variables
 has_borrow = False
 has_borrowed = False
-borrow_amount = 3
+borrow_amount = 0
 
 achievements = {
 
@@ -425,6 +426,17 @@ def devtools():
             globals()["total_won"] = 50000
             globals()["luck"] = 1
             globals()["is_high_roller"] = True
+        if menu == "dump":
+            gl = globals()
+            for g in gl.keys():
+                if "__" in g or isinstance(gl[g], types.FunctionType) or isinstance(gl[g], types.ModuleType):
+                    continue
+                if isinstance(gl[g], dict):
+                    print(f"{g}: dictionary with {len(gl[g])} items")
+                elif isinstance(gl[g], list):
+                    print(f"{g}: list with {len(gl[g])} items")
+                else:
+                    print(f"{g}: {gl[g]}")
             
         if menu == "pass":
             clear_screen()
@@ -658,6 +670,22 @@ def roulette_spin():
     
 
 def get_roulette_reward(bet_type, x, bet_amount, color, number):
+    # Roulette Wheel
+    dozen_one = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+    dozen_two = [13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
+    dozen_three = [25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36]
+
+    column_one = [1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31, 34]
+    column_two = [2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35]
+    column_three = [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36]
+
+    low = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
+    high = [19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36]
+
+    reds = [1, 3, 5, 7, 9, 12, 14, 16, 18, 21, 23, 25, 27, 28, 30, 32, 34, 36]  
+    blacks = [a if a not in reds else None for a in range(1, 37)]
+
+    
     if bet_type == "single":
         if bet_amount == int(number):
             return bet_amount * 35 + bet_amount
@@ -822,7 +850,7 @@ def high_rollers():
         menu = input("\ntype 'chips' to buy more chips, 'credits' to cash in chips, or 'spin' to play roulette. 'pass' to leave\n>> ")
         if menu == "chips":
             clear_screen()
-            print("\nExchange rate: 1 Chip for 5 Credits")
+            print("Exchange rate: 1 Chip for 5 Credits")
             while True:
                 amount = input("Enter an amount of chips to buy. 'pass' to leave\n>> ")
                 if amount == "pass" or (amount.isnumeric() and int(amount) > 0):
@@ -1001,11 +1029,14 @@ def sell_kidney():
     else:
         kidney = "left"
     days_out = random.randint(5,10)
-    clear_screen()
-    print(f"You decide to sell your {kidney} kidney to continue gambling.")
-    print(f"You manage to get {kidney_value:,} credits for it.")
-    print(f"After {days_out} days in the hospital, you're back on your feet, itching for more gambling.")
+    for i in range(days_out):
+        clear_screen()
+        print(f"You decide to sell your {kidney} kidney to continue gambling.")
+        print(f"You manage to get {kidney_value:,} credits for it.")
+        print(f"After {i} days in the hospital, you're back on your feet, itching for more gambling.")    
+        time.sleep((random.randint(10,20))/10)
     input("Press [ENTER] to continue.\n")
+
     
     spins += days_out
     player_credits += kidney_value
@@ -1178,7 +1209,11 @@ while is_running:
     clear_screen()
 
     print("Spinning...")
-    time.sleep(5 - speed_upgrades)
+    
+    if kidneys == 1:
+        time.sleep(6 - speed_upgrades)
+    else:
+        time.sleep(5 - speed_upgrades)
 
     spin_result = get_letters()
     spins += 1
@@ -1214,6 +1249,7 @@ while is_running:
         total_lost += loss
 
         player_credits -= loss
+
 
     if has_insurance:
         player_credits -= insurance_payment
@@ -1296,6 +1332,7 @@ while is_running:
 
     if total_won >= 50000 and not is_high_roller:
             is_high_roller = True
+            clear_screen()
             print("You can now visit the High Rollers club!")
             input("\n[ENTER] to continue\n")
 
