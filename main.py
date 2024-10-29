@@ -420,8 +420,11 @@ def devtools():
                 except:
                     print(f"Achievement '{achievement_name}' not found")
                     break
-        if menu == "misc":
-            submenu = input(">> ")
+        if menu == "jumpstart":
+            player_credits = 1000000
+            globals()["total_won"] = 50000
+            globals()["luck"] = 1
+            globals()["is_high_roller"] = True
             
         if menu == "pass":
             clear_screen()
@@ -772,6 +775,8 @@ Dozen Three     (25-36)
 
             if bet_amount <= 0 or bet_amount > roulette_chips:
                 print("Enter a non-zero number of chips that you can afford.")
+            else:
+                break
 
             roulette_chips -= bet_amount
 
@@ -825,7 +830,9 @@ def high_rollers():
                 else:
                     print("Enter a non-zero numeric value or 'pass'")
                     continue
-                if amount == "pass": break
+                
+                if amount == "pass": 
+                    break
                 else:
                     amount = round(int(amount))
                     if amount * 5 > player_credits:
