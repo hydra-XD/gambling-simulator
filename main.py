@@ -479,7 +479,7 @@ def display_home_screen():
                 insurance_payment = round(total_covered / 20)
 
             print(
-                f"\nInsurance Information:\n- Plan: {plan}\n- Payment: {insurance_payment} credits/day\n- Coverage: {insurance_coverage}%")
+                f"\nInsurance Information:\n- Plan: {plan}\n- Payment: {insurance_payment} credits/day\n- Coverage: {insurance_coverage}%\n")
             print(("-" * 20))
 
         print(f"\n{pick_flavor_text()}\n")
