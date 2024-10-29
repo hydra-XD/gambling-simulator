@@ -435,6 +435,8 @@ def devtools():
                     print(f"{g}: dictionary with {len(gl[g])} items")
                 elif isinstance(gl[g], list):
                     print(f"{g}: list with {len(gl[g])} items")
+                elif len(g) == 1:
+                    continue
                 else:
                     print(f"{g}: {gl[g]}")
             
@@ -1127,7 +1129,6 @@ if IS_DEV_BUILD:
     print("Welcome to Gambling Simulator dev-1.11!\nThis is a developer build and may be unfinished or broken.\n\nPress [ENTER] to continue")
 else:
     print("Welcome to Gambling Simulator v1.10!\n\nPress [ENTER] to continue")
-m = input("")
 
 while is_running:
     achievements_start = {}
