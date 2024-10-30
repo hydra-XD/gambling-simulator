@@ -1,12 +1,13 @@
 # Gambling Simulator Changelog
 
-## v1.11 (The High Roller Update)
+## v1.11 (The Rich & Shifty Update)
 
-- High Rollers Club
+- Adeed the High Rollers Club
 - More bonus achievements
 - Sell a kidney
 - Tons of fixes
-- 1300 lines
+- 1400 lines
+- Added the Fake ID
 
 ## v1.10 (The Bonus Update)
 
@@ -51,7 +52,7 @@
 - Added Insurance and the Insurance Shop
 - UI/UX Changes
 
-## v1.4
+## v1.4 (The Speed Update)
 
 - Added Energy Drink
 - Bugfixes

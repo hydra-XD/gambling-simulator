@@ -120,7 +120,8 @@ bonus_achievements = {
     "extra_zesty": False, # see all flavor text #
     "regular_patron": False,  # have every conversation with the bartender #
     "back_from_the_brink": False,  # win the deal #
-    "last_resort": False  # sell a kidney #
+    "last_resort": False,  # sell a kidney #
+    "shifty_business": False  # buy a fake ID #
 }
 
 # Bonus and letter options
@@ -319,7 +320,9 @@ You've Unlocked [{a}/{len(achievements)}] Achievements ({p}%) {"(Cheats used)" i
         if bonus_achievements["back_from_the_brink"]:
             print("    [x] Back from the Brink (Win 'The Deal')")
         if bonus_achievements["last_resort"]:
-            print("    [x] Last Resort (Sell your kidney)")    
+            print("    [x] Last Resort (Sell your kidney)")
+        if bonus_achievements["shifty_business"]:
+            print("    [x] Shifty Business (Buy a fake ID)")    
 
 
 def get_variable_type(var):
@@ -432,12 +435,12 @@ def devtools():
             for g in gl.keys():
                 if "__" in g or isinstance(gl[g], types.FunctionType) or isinstance(gl[g], types.ModuleType):
                     continue
+                if len(g) <= 2:
+                    continue
                 if isinstance(gl[g], dict):
                     print(f"{g}: dictionary with {len(gl[g])} items")
                 elif isinstance(gl[g], list):
                     print(f"{g}: list with {len(gl[g])} items")
-                elif len(g) == 1:
-                    continue
                 else:
                     print(f"{g}: {gl[g]}")
             
@@ -978,26 +981,46 @@ def visit_shop():
         game_over(4)
 
 def black_market():
+    global player_credits, fake_id, bonus_achievements
     if not fake_id:
+        clear_screen()
         print("You notice a strange man hunched in a corner. He's waving at you.")
         choice = input("Approach him? (y/n)\n>> ")
         if choice.lower() in ["y", "yes"]:
             print("As you get closer, he pulls a card out of his jacket and shows it to you. It's a fake ID.")
             print("""
-—————————————————————————————————————————————
-|    {* *}    | NAME: John Smith
-|   /    \    | D.O.B: 9/11/01
-| --|    |--  | SEX: M
-|   |    |    |
-|——————————————
-|
-|
-|
-|
-—————————————————————————————————————————————
-
-
+——————————————————————————————————————————————
+|    /--\     |                              |
+|    \__/     |  NAME: JOHN SMITH            |
+|  _/    \_   |  D.O.B: 9/11/01              |
+|   |    |    |  SEX: M                      |
+|——————————————                              |
+| ID: 841238800856874                        |
+| EYES: BRO                                  |
+| RACE: W                                    |
+| HEIGHT: 7' 25"                             |
+——————————————————————————————————————————————
             """)
+            print("He says he'll sell it to you for the low, low price of 50,000 credits. Hand him the money? (y/n)")
+            choice = input(">> ")
+            if choice.lower() in ["y", "yes"]:
+                if player_credits >= 50000:
+                    print("You hand over the credits and recieve the card in return.")
+                    fake_id = True
+                    player_credits -= 50000
+                    bonus_achievements["shifty_business"] = True
+                else:
+                    print("You want it, but you don't have enough money.")
+            else:
+                print("You back away without a word.")
+        else:
+            print("You carry on without stopping.")
+            pass
+
+    if random.randint(1, 2) == 2: # rolls a chance every visit
+        n = random.randint(100, 200)
+        player_credits -= n
+        print(f"As you leave, you notice your wallet feels {n} credits lighter than it did a minute ago.")
 
 # visit the in-game bank
 def visit_bank():
@@ -1014,42 +1037,62 @@ def visit_bank():
             if in_.split(" ")[0] == "loan":
                 amount = int(in_.split(" ")[1])
                 loan_amount = amount
-                achievements["at_least_i_still_have_clothes"] = True
-                if loan_amount <= 10:
-                    achievements["petty_cash"] = True
-                player_credits += amount
-                if len(str(amount)) < 8:
-                    interest_percent = 0.05
+
+                arrest_chance = 10
+                if loan_amount >= 10000:
+                    arrest_chance = 12
+                if loan_amount >= 50000:
+                    arrest_chance = 17
+                if loan_amount >= 100000:
+                    arrest_chance = 25
+                if loan_amount >= 250000:
+                    arrest_chance = 40
+                if loan_amount >= 500000:
+                    arrest_chance = 70
+
+                if fake_id and random.randint(0,100) <= arrest_chance:
+                    game_over(5)
                 else:
-                    interest_percent = 0.05 + ((len(str(amount)) - 7) * 0.05)
-                days_passed = 0
-                loan_payment = amount
-                has_loan = True
+                    achievements["at_least_i_still_have_clothes"] = True
+                    if loan_amount <= 10:
+                        achievements["petty_cash"] = True
+                    player_credits += amount
+                    if len(str(amount)) < 8:
+                        interest_percent = 0.05
+                    else:
+                        interest_percent = 0.05 + ((len(str(amount)) - 7) * 0.05)
+                    days_passed = 0
+                    loan_payment = amount
+                    has_loan = True
 
-                loans_total += 1
-                if loans_total >= 2:
-                    achievements["still_hanging_in_there"] = True
+                    loans_total += 1
+                    if loans_total >= 2:
+                        achievements["still_hanging_in_there"] = True
 
-                print(
-                    f"You took out a loan of {amount:,} credits\nBe prepared to pay it back in three days.")
-                input("\nPress [ENTER] to continue\n")
-                return
+                    print(f"You took out a loan of {amount:,} credits.")
+                    if not fake_id:
+                        print("Be prepared to pay it back in three days.")
+                    input("\nPress [ENTER] to continue\n")
+                    return
     else:
-        print(
-            f"Time to pay your loan back.\nYour loan payment is {loan_payment:,} credits")
-        print("Credits:", player_credits)
-        input("\nPress [ENTER] to continue\n")
-        if player_credits > loan_payment:
-            player_credits -= loan_payment
-            loans_paid += 1
-            has_loan = False
-            achievements["money_management"] = True
-            if loans_paid == 3:
-                achievements["redemption_arc"] = True
+        if fake_id:
             return
         else:
-            loan_payment -= player_credits
-            player_credits = 0
+            print(
+                f"Time to pay your loan back.\nYour loan payment is {loan_payment:,} credits")
+            print("Credits:", player_credits)
+            input("\nPress [ENTER] to continue\n")
+            if player_credits > loan_payment:
+                player_credits -= loan_payment
+                loans_paid += 1
+                has_loan = False
+                achievements["money_management"] = True
+                if loans_paid == 3:
+                    achievements["redemption_arc"] = True
+                return
+            else:
+                loan_payment -= player_credits
+                player_credits = 0
 
 
 def sell_kidney():
@@ -1110,21 +1153,22 @@ def game_over(source):
     print(f"After {spins} days...")
 
     if spouse == "wife":
-        end_text_1 = "\nYou are broke :(\nYou lost your house\nYou lost your wife\nShe took the kids\n\n\nWas it worth it?"
-        end_text_2 = "\nYou made it out!\nYour wife is waiting outside for you.\nShe hugs you and says, \"I'm glad you're back.\""
-        end_text_3 = "\nYou made it out!\nYour wife is waiting outside for you.\nShe hands you a stack of papers\nShe says, \"I want a divorce.\""
-        end_text_4 = "\nYou lost the money your wife gave you! She calls, but you're too ashamed to pick up. You know it's over."
+        end_text_0 = "\nYou are broke :(\nYou lost your house\nYou lost your wife\nShe took the kids\n\n\nWas it worth it?"
+        end_text_1 = "\nYou made it out!\nYour wife is waiting outside for you.\nShe hugs you and says, \"I'm glad you're back.\""
+        end_text_2 = "\nYou made it out!\nYour wife is waiting outside for you.\nShe hands you a stack of papers\nShe says, \"I want a divorce.\""
+        end_text_3 = "\nYou lost the money your wife gave you! She calls, but you're too ashamed to pick up. You know it's over."
     if spouse == "husband":
-        end_text_1 = "\nYou are broke :(\nYou lost your house\nYou lost your husband\nHe took the kids\n\n\nWas it worth it?"
-        end_text_2 = "\nYou made it out!\nYour husband is waiting outside for you.\nHe hugs you and says, \"I'm glad you're back.\""
-        end_text_3 = "\nYou made it out!\nYour husband is waiting outside for you.\nHe hands you a stack of papers\nHe says, \"I want a divorce.\""
-        end_text_4 = "\nYou lost the money your husband gave you! He calls, but you're too ashamed to pick up. You know it's over."
-    end_text_5 = "Unfortunately, your reduced number of kidneys couldn't handle your diet, and you have perished."
+        end_text_0 = "\nYou are broke :(\nYou lost your house\nYou lost your husband\nHe took the kids\n\n\nWas it worth it?"
+        end_text_1 = "\nYou made it out!\nYour husband is waiting outside for you.\nHe hugs you and says, \"I'm glad you're back.\""
+        end_text_2 = "\nYou made it out!\nYour husband is waiting outside for you.\nHe hands you a stack of papers\nHe says, \"I want a divorce.\""
+        end_text_3 = "\nYou lost the money your husband gave you! He calls, but you're too ashamed to pick up. You know it's over."
+    end_text_4 = "Unfortunately, your reduced number of kidneys couldn't handle your diet, and you have perished."
+    end_text_5 = "Unfortunately, you got caught with a fake ID. You've been arrested and have no one to pay your bail. Guess that's it for you."
     if source == 0:  # bankruptcy
-        print(end_text_1)
+        print(end_text_0)
     elif source == 1:  # loan payment
         print(f"You missed your loan payment by {loan_payment:,} credits")
-        print(end_text_1)
+        print(end_text_0)
     elif source == 2:  # ESCAPE
         achievements["the_light_is_blinding"] = True
         calculate_achievements()
@@ -1140,12 +1184,14 @@ def game_over(source):
             p = 0
 
         if p >= 100:
-            print(end_text_2)
+            print(end_text_1)
         if p < 100:
-            print(end_text_3)
-    elif source == 3:  # Failed lifeline
-        print(end_text_4)
+            print(end_text_2)
+    elif source == 3:  # Failed the deal
+        print(end_text_3)
     elif source == 4: #kidney
+        print(end_text_4)
+    elif source == 5: #ID 
         print(end_text_5)
 
     display_achievements()
@@ -1158,6 +1204,7 @@ if IS_DEV_BUILD:
     print("Welcome to Gambling Simulator dev-1.11!\nThis is a developer build and may be unfinished or broken.\n\nPress [ENTER] to continue")
 else:
     print("Welcome to Gambling Simulator v1.10!\n\nPress [ENTER] to continue")
+input("")
 
 while is_running:
     achievements_start = {}
@@ -1201,10 +1248,10 @@ while is_running:
             option = input(">> ")
             if option == "bank":
                 visit_bank()
-            if not has_borrowed and spins >= 10:
+            elif not has_borrowed and spins >= 10:
                 if option == "borrow":
                     borrow_from_spouse()
-            if kidneys == 2 and spins >= 50:
+            elif kidneys == 2 and spins >= 50:
                 if option == "kidney":
                     sell_kidney()
             else:
@@ -1371,6 +1418,8 @@ while is_running:
     else:
         while True:
             clear_screen()
+            if spins >= 25 and not fake_id:
+                black_market()
             if not is_high_roller:
                 print("Type 'shop' to visit the shop, 'insurance' to buy insurance, or 'pass' to leave")
             else:
@@ -1386,4 +1435,9 @@ while is_running:
                 high_rollers()
             if in_ == "pass":
                 break
+
+    try:
+        del no_spaces, name, in_
+    except:
+        pass
     clear_screen()
