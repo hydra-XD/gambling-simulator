@@ -47,6 +47,7 @@ bar_dialogue_count = 0
 
 # Bank variables
 has_loan = False
+fake_id = False
 interest_percent = 0.05
 loan_payment = 0
 loan_amount = 0
@@ -539,7 +540,7 @@ def get_letters() -> list:
 
 
 def calculate_reward(spin: list, bet: int) -> int:
-    global wins, streak
+    global wins, streak, has_borrow
     double = False
     triple = False
     bonus = False
@@ -558,6 +559,9 @@ def calculate_reward(spin: list, bet: int) -> int:
     for bonus_word in bonuses:
         if f"{spin[0]}{spin[1]}{spin[2]}" == bonus_word:
             bonus = True
+
+    if has_borrow:
+        bonus = True
 
     if double:
         reward *= 2
@@ -807,8 +811,8 @@ Dozen Three     (25-36)
                 print("Enter a non-zero number of chips that you can afford.")
             else:
                 break
-
-            roulette_chips -= bet_amount
+            
+        roulette_chips -= bet_amount
 
         clear_screen()
 
@@ -852,6 +856,7 @@ def high_rollers():
         menu = input("\ntype 'chips' to buy more chips, 'credits' to cash in chips, or 'spin' to play roulette. 'pass' to leave\n>> ")
         if menu == "chips":
             clear_screen()
+            print("Credits:", player_credits)
             print("Exchange rate: 1 Chip for 5 Credits")
             while True:
                 amount = input("Enter an amount of chips to buy. 'pass' to leave\n>> ")
@@ -876,6 +881,7 @@ def high_rollers():
             play_roulette()
         elif menu == "credits":
             clear_screen()
+            print(f"You have {roulette_chips} chips")
             while True:
                 amount = input("Enter an amount of chips to cash in. 'pass' to leave\n>> ")
                 if amount == "pass" or (amount.isnumeric() and int(amount) > 0):
@@ -892,6 +898,8 @@ def high_rollers():
                     else:
                         player_credits += round(amount / 5)
                         roulette_chips -= amount
+        elif menu == "pass":
+            break
 
 # Handle the in-game shop for upgrades
 def visit_shop():
@@ -969,6 +977,27 @@ def visit_shop():
     if purchase in ["beer", "fries", "hot dog", "energy drink"] and kidneys == 1:
         game_over(4)
 
+def black_market():
+    if not fake_id:
+        print("You notice a strange man hunched in a corner. He's waving at you.")
+        choice = input("Approach him? (y/n)\n>> ")
+        if choice.lower() in ["y", "yes"]:
+            print("As you get closer, he pulls a card out of his jacket and shows it to you. It's a fake ID.")
+            print("""
+—————————————————————————————————————————————
+|    {* *}    | NAME: John Smith
+|   /    \    | D.O.B: 9/11/01
+| --|    |--  | SEX: M
+|   |    |    |
+|——————————————
+|
+|
+|
+|
+—————————————————————————————————————————————
+
+
+            """)
 
 # visit the in-game bank
 def visit_bank():

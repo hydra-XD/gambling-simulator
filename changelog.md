@@ -1,5 +1,13 @@
 # Gambling Simulator Changelog
 
+## v1.11 (The High Roller Update)
+
+- High Rollers Club
+- More bonus achievements
+- Sell a kidney
+- Tons of fixes
+- 1300 lines
+
 ## v1.10 (The Bonus Update)
 
 - 1000 Lines!!!
