@@ -10,7 +10,7 @@
 - you can no longer take out loans or get insurance
 - higher interest, but you can pay whenever
 
-## "fake ID" by Everett
+## "fake ID" by Everett (IMPLEMENTED)
 
 - pay 50k for fake ID
 - removes having to pay back loans

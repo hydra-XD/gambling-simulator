@@ -1024,7 +1024,7 @@ def black_market():
 
 # visit the in-game bank
 def visit_bank():
-    global player_credits, loan_amount, loan_payment, has_loan, interest_percent, achievements, loans_total, loans_paid
+    global player_credits, loan_amount, loan_payment, has_loan, interest_percent, achievements, loans_total, loans_paid, luck
     clear_screen()
     if not has_loan:
         while True:
@@ -1038,17 +1038,11 @@ def visit_bank():
                 amount = int(in_.split(" ")[1])
                 loan_amount = amount
 
-                arrest_chance = 10
-                if loan_amount >= 10000:
-                    arrest_chance = 12
-                if loan_amount >= 50000:
-                    arrest_chance = 17
-                if loan_amount >= 100000:
-                    arrest_chance = 25
-                if loan_amount >= 250000:
-                    arrest_chance = 40
-                if loan_amount >= 500000:
-                    arrest_chance = 70
+                arrest_chance = (-1 * (3.874 * (10 ** -11))*(loan_amount ** 2)) + (0.0001111 * loan_amount) + 18.87
+                arrest_chance -= 4(luck)
+
+                if loan_amount >= 1434167:
+                    arrest_chance = 99
 
                 if fake_id and random.randint(0,100) <= arrest_chance:
                     game_over(5)
