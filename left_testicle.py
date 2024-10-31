@@ -55,26 +55,28 @@ def calculate_reward(spin: list, bet: int) -> int:
 
     return reward
 
+d = 1
 
 l = 0
-b = 10
-for i in range(21):
-    all_spins = []
-    for i in range(50000):
+
+pc = 250
+
+deez = []
+
+for i in range(250):
+    pc = 250
+    d = 1
+    bet = 1 + i
+    while True:
         spin = get_letters(l)
-        r = calculate_reward(spin, b)
-        if r > 0:
-            all_spins.append(r)
+        pc -= bet
+        r = calculate_reward(spin, bet)
+        pc += r
+        if pc <= 0:
+            break
         else:
-            all_spins.append((-1 *b))
-    t = 0
-    for i in all_spins:
-        t += i
-    a = round(((t / len(all_spins)) * 100))
-    w = 0
-    for i in all_spins:
-        if i > 0:
-            w += 1
-    p = round((100 * (w / len(all_spins))), 2)
-    print(l, "|", a, "|", f"{p}%")
-    l += 0.5
+            d += 1
+    print(f"D{bet} =", d)
+    deez.append(d)
+
+print(deez)

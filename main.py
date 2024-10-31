@@ -357,7 +357,7 @@ def devtools():
                 f"{variable} is currently set to {current_value}. Press [ENTER] to change it or 'cancel' to go back\n>> ")
 
             if menu.lower() == "cancel":
-                break
+                continue
 
             if _type == int:
                 while True:
@@ -406,6 +406,8 @@ def devtools():
                         print(
                             f"{achievement_name} is now set to {achievements[achievement_name]}")
                         break
+                    else:
+                        break
                 except:
                     print(f"Achievement '{achievement_name}' not found")
                     break
@@ -421,6 +423,8 @@ def devtools():
                             bonus_achievements[achievement_name] = True
                         print(
                             f"{achievement_name} is now set to {bonus_achievements[achievement_name]}")
+                        break
+                    else:
                         break
                 except:
                     print(f"Achievement '{achievement_name}' not found")
@@ -483,7 +487,7 @@ def display_home_screen():
                 insurance_payment = round(total_covered / 20)
 
             print(
-                f"\nInsurance Information:\n- Plan: {plan}\n- Payment: {insurance_payment} credits/day\n- Coverage: {insurance_coverage}%\n")
+                f"\nInsurance Information:\n- Plan: {plan}\n- Payment: {insurance_payment:,} credits/day\n- Coverage: {insurance_coverage}%\n")
             print(("-" * 20))
 
         print(f"\n{pick_flavor_text()}\n")
@@ -1040,6 +1044,8 @@ def visit_bank():
 
                 arrest_chance = (-1 * (3.874 * (10 ** -11))*(loan_amount ** 2)) + (0.0001111 * loan_amount) + 18.87
                 arrest_chance -= 4(luck)
+
+                arrest_chance = int(arrest_chance)
 
                 if loan_amount >= 1434167:
                     arrest_chance = 99
