@@ -1,4 +1,8 @@
 block_cipher = None
+
+DISTPATH = os.path.join('build')  # Specify your custom dist folder
+WORKPATH = os.path.join('build')  # Specify your custom build folder
+
 a = Analysis(['build/main.min.py'],
              pathex=[],
              binaries=[],
@@ -7,7 +11,7 @@ a = Analysis(['build/main.min.py'],
              hookspath=[],
              runtime_hooks=[],
              excludes=[])
-pyz = PYZ(a.pure, a.zipped, cipher=block_cipher)
+pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
 exe = EXE(pyz,
           a.scripts,
           [],
@@ -16,7 +20,8 @@ exe = EXE(pyz,
           bootloader_ignore_signals=False,
           strip=False,
           upx=True,
-          console=True)
+          console=True,
+          onefile=True)
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,
@@ -25,3 +30,6 @@ coll = COLLECT(exe,
                upx=True,
                upx_exclude=[],
                name='Gambling Simulator v1.11')
+
+coll.distpath = DISTPATH
+coll.workpath = WORKPATH

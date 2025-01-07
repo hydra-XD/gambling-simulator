@@ -1,8 +1,11 @@
 BUILDING FROM SOURCE:
 
 To acheive lower executable sizes, use https://python-minifier.com/.
-Place minifed source in "build/main.min.py"
+Place minifed source in 'build/main.min.py'
 
 - PyInstaller:
 
-    From the root folder, run "pyinstaller build.spec"
+    From the root folder, run "pyinstaller --distpath ./build  build.spec"
+    You can ignore or delete the './build/build' folder
+    .EXE will be located in the './build/Gambling Simulator vX.XX' folder
+    README.md will be located in the './build/Gambling Simulator vX.XX/_internal' folder
