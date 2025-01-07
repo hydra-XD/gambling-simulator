@@ -1,1 +1,8 @@
-BUILDING FROM SOURCE
+BUILDING FROM SOURCE:
+
+To acheive lower executable sizes, use https://python-minifier.com/.
+Place minifed source in "build/main.min.py"
+
+- PyInstaller:
+
+    From the root folder, run "pyinstaller build.spec"

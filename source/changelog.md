@@ -34,7 +34,7 @@
 - Fixed an issue where the player's credits would go below 0 due to insurance payments
 - Added more endings
 
-## v1.7
+## v1.7 (The Income Tax Update)
 
 - Re-reworked insurance payments
   - Payment becomes 5% of your total insurance coverage when above base rate
