@@ -138,7 +138,7 @@ letters = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L",
 
 # FLAVOR TEXT (EXTRA ZESTY)
 flavor_text = [
-    {"days_start": 0, "days_end": 1, "text": "You can practically taste your winnings already.", "displayed": False},
+    {"days_start": 0, "days_end": 1, "text": f"You can practically taste your {Fore.GREEN}winnings{Style.RESET_ALL} already.", "displayed": False},
     {"days_start": 2, "days_end": 5, "text": "You haven't been here very long, but you feel like you could stay forever.", "displayed": False},
     {"days_start": 6, "days_end": 9, "text": "You begin to notice a regular deposit of crumbs at your machine. Are they yours?", "displayed": False},
     {"days_start": 10, "days_end": 14, "text": f"The handle on the machine is getting {Style.DIM}greasy{Style.RESET_ALL}. You should wash your hands.", "displayed": False},
@@ -193,6 +193,8 @@ def clear_screen():
     else:  # mac & linux (posix)
         os.system('clear')
 
+def btn(label):
+    return f"[{Style.BRIGHT}{Fore.CYAN}{label.upper()}{Style.RESET_ALL}]"
 
 def calculate_achievements():
     if total_won >= 1:
@@ -308,7 +310,7 @@ You've Unlocked [{f"{Fore.GREEN}{a}/{len(achievements)}{Style.RESET_ALL}" if a =
     [{ach_x if achievements["what_year_is_it"] else " "}] What Year is It? (Spend 100 days gambling)""")
 
     if achievements["the_light_is_blinding"]:
-        print(f"    [{Fore.MAGENTA}{Style.BRIGHT}x{Style.RESET_ALL}] The Light is Blinding (Leave the casino after 100 days)")
+        print(f"    [{Fore.MAGENTA}{Style.BRIGHT}x{Style.RESET_ALL}] The Light is {Fore.YELLOW}{Style.BRIGHT}Blinding{Style.RESET_ALL} (Leave the casino after 100 days)")
 
     b = 0 
     for i in bonus_achievements.keys():
@@ -365,7 +367,7 @@ def devtools():
             _type = get_variable_type(current_value)
 
             menu = input(
-                f"{variable} is currently set to {current_value}. Press [ENTER] to change it or 'cancel' to go back\n>> ")
+                f"{variable} is currently set to {current_value}. Press {btn('enter')} to change it or 'cancel' to go back\n>> ")
 
             if menu.lower() == "cancel":
                 continue
@@ -405,7 +407,7 @@ def devtools():
                     print(f"Function '{function}' not found")
                     break
         if menu == "completion":
-            menu = input("Press [ENTER] to enable all achievements or 'cancel' to go back ")
+            menu = input(f"Press {btn('enter')} to enable all achievements or 'cancel' to go back ")
             for i in achievements:
                 achievements[i] = True
             for i in bonus_achievements:
@@ -414,7 +416,7 @@ def devtools():
             while True:
                 try:
                     achievement_name = input("Enter achievement name\n>> ")
-                    menu = input(f"{achievement_name} is currently set to {achievements[achievement_name]}. Press [ENTER] to toggle it or 'cancel' to go back\n>> ")
+                    menu = input(f"{achievement_name} is currently set to {achievements[achievement_name]}. Press {btn('enter')} to toggle it or 'cancel' to go back\n>> ")
                     if menu != "cancel":
                         if achievements[achievement_name]:
                             achievements[achievement_name] = False
@@ -432,7 +434,7 @@ def devtools():
             while True:
                 try:
                     achievement_name = input("Enter achievement name\n>> ")
-                    menu = input(f"{achievement_name} is currently set to {bonus_achievements[achievement_name]}. Press [ENTER] to toggle it or 'cancel' to go back\n>> ")
+                    menu = input(f"{achievement_name} is currently set to {bonus_achievements[achievement_name]}. Press {btn('enter')} to toggle it or 'cancel' to go back\n>> ")
                     if menu != "cancel":
                         if bonus_achievements[achievement_name]:
                             bonus_achievements[achievement_name] = False
@@ -483,12 +485,12 @@ def display_home_screen():
         print(("-" * 20))
         try:
             win_percentage = 100 * (wins / spins)
-            print("\nWin%: " + str(round(win_percentage, 2)) + "%")
+            print("\n" + Fore.GREEN + "Win%" + Style.RESET_ALL + ": " + str(round(win_percentage, 2)) + "%")
         except ZeroDivisionError:
-            print("\nWin%: N/A")
-        print("Reward Multiplier:", round(reward_multiplier, 2))
-        print("Luck:", luck)
-        print("Streak Multiplier:", round(streak_multiplier, 1), "\n")
+            print(f" \n{Fore.GREEN}Win%{Style.RESET_ALL}: N/A")
+        print(Fore.YELLOW + "Reward Multiplier" + Style.RESET_ALL + ":", round(reward_multiplier, 2))
+        print(Fore.MAGENTA + "Luck" + Style.RESET_ALL + ":", luck)
+        print(Fore.CYAN + "Streak Multiplier" + Style.RESET_ALL + ":", round(streak_multiplier, 1), "\n")
         print(("-" * 20))
         if has_insurance:
             if insurance_type == 1:
@@ -513,11 +515,11 @@ def display_home_screen():
 
         if spins < 100:
             menu = input(
-                "\nType 'achievements' to view your achievements or press [ENTER] to spin\n>> ")
+                f"\nType 'achievements' to view your achievements or press {btn('enter')} to spin\n>> ")
 
             if menu == "achievements":
                 display_achievements()
-                input("\nPress [ENTER] to continue\n")
+                input(f"\nPress {btn('enter')} to continue\n")
             elif menu == cake:
                 devtools()
             else:
@@ -525,11 +527,11 @@ def display_home_screen():
                 return
         elif spins >= 100:
             menu_ = input(
-                "\nType 'achievements' to view your achievements, press [ENTER] to spin, or type 'leave' to escape\n>> ")
+                f"\nType 'achievements' to view your achievements, press {btn('enter')} to spin, or type 'leave' to escape\n>> ")
 
             if menu_ == "achievements":
                 display_achievements()
-                input("\nPress [ENTER] to continue\n")
+                input(f"\nPress {btn('enter')} to continue\n")
             elif menu_ == "thecakeisalie":
                 devtools()
             elif menu_ == "leave":
@@ -682,7 +684,7 @@ NOTE: All plans require a down payment equal to 10 times their starting rate
             break
 
     insurance_base = insurance_payment
-    print("\nThank you for your business!\n\n[ENTER] to continue")
+    print(f"\nThank you for your business!\n\n{btn('enter')} to continue")
     input("")
 
 def roulette_spin():
@@ -849,7 +851,7 @@ Dozen Three     (25-36)
         print("Reward: " + str(reward))
         print("Chips: " + str(roulette_chips))
 
-        menu = input("'leave' to leave or [ENTER] to continue")
+        menu = input(f"'leave' to leave or {btn('enter')} to continue")
 
         clear_screen()
 
@@ -870,7 +872,7 @@ def high_rollers():
 
     if not is_high_roller:
         print("You don't have a membership card. \nThe bouncer turns you away.")
-        input("\n[ENTER] to continue\n")
+        input(f"\n{btn('enter')} to continue\n")
         return
 
     while True:  
@@ -946,10 +948,10 @@ def visit_shop():
     print(f"\nCredits: {Fore.YELLOW}{player_credits:,}{Style.RESET_ALL}")
     print(f"""
     -- MENU --
-    Beer: +5% Reward Multiplier (Cost: {reward_upgrade_price})
-    Fries: +0.5 Luck (Cost: {luck_upgrade_price})
-    Hot Dog: +0.1 Streak Multiplier (Cost: {streak_upgrade_price})
-    Energy Drink: -1s Wheel Spin Time [{speed_upgrades+1 if speed_upgrades < 5 else 5}/5] (Cost: {speed_upgrade_price})
+    Beer: +{Fore.YELLOW}5% Reward Multiplier{Style.RESET_ALL} (Cost: {Fore.YELLOW}{reward_upgrade_price}{Style.RESET_ALL})
+    Fries: +{Fore.MAGENTA}0.5 Luck{Style.RESET_ALL} (Cost: {Fore.YELLOW}{luck_upgrade_price}{Style.RESET_ALL})
+    Hot Dog: +{Fore.CYAN}0.1 Streak Multiplier{Style.RESET_ALL} (Cost: {Fore.YELLOW}{streak_upgrade_price}{Style.RESET_ALL})
+    Energy Drink: -{Fore.GREEN}1s Wheel Spin Time{Style.RESET_ALL} [{Fore.GREEN Style.BRIGHT if speed_upgrades >= 5 else ""}{speed_upgrades+1 if speed_upgrades < 5 else 5}/5{Style.RESET_ALL}] (Cost: {Fore.YELLOW}{speed_upgrade_price}{Style.RESET_ALL})
     """)
     print("Type 'buy <item name>' to buy an item or 'pass' to leave")
     while True:
@@ -959,7 +961,7 @@ def visit_shop():
         purchase = in_[4:].lower()
         if purchase == "beer":
             if reward_upgrade_price > player_credits:
-                print("You can't afford that!")
+                print(f"{Fore.RED}You can't afford that!{Style.RESET_ALL}")
                 continue
             else:
                 player_credits -= reward_upgrade_price
@@ -968,7 +970,7 @@ def visit_shop():
                 break
         if purchase == "fries":
             if luck_upgrade_price > player_credits:
-                print("You can't afford that!")
+                print(f"{Fore.RED}You can't afford that!{Style.RESET_ALL}")
                 continue
             else:
                 player_credits -= luck_upgrade_price
@@ -977,7 +979,7 @@ def visit_shop():
                 break
         if purchase == "hot dog":
             if streak_upgrade_price > player_credits:
-                print("You can't afford that!")
+                print(f"{Fore.RED}You can't afford that!{Style.RESET_ALL}")
                 continue
             else:
                 player_credits -= streak_upgrade_price
@@ -986,7 +988,7 @@ def visit_shop():
                 break
         if purchase == "energy drink":
             if speed_upgrade_price > player_credits:
-                print("You can't afford that!")
+                print(f"{Fore.RED}You can't afford that!{Style.RESET_ALL}")
                 continue
             elif speed_upgrades > 3:
                 print("You can't upgrade this stat anymore!")
@@ -1089,7 +1091,7 @@ def visit_bank():
                     print(f"You took out a loan of {amount:,} credits.")
                     if not fake_id:
                         print("Be prepared to pay it back in three days.")
-                    input("\nPress [ENTER] to continue\n")
+                    input(f"\nPress {btn('enter')} to continue\n")
                     return
     else:
         if fake_id:
@@ -1098,7 +1100,7 @@ def visit_bank():
             print(
                 f"Time to pay your loan back.\nYour loan payment is {loan_payment:,} credits")
             print("Credits:", player_credits)
-            input("\nPress [ENTER] to continue\n")
+            input(f"\nPress {btn('enter')} to continue\n")
             if player_credits > loan_payment:
                 player_credits -= loan_payment
                 loans_paid += 1
@@ -1126,7 +1128,7 @@ def sell_kidney():
         print(f"You manage to get {kidney_value:,} credits for it.")
         print(f"After {i} days in the hospital, you're back on your feet, itching for more gambling.")    
         time.sleep((random.randint(10,20))/10)
-    input("Press [ENTER] to continue.\n")
+    input(f"Press {btn('enter')} to continue.\n")
 
     
     spins += days_out
@@ -1218,9 +1220,9 @@ def game_over(source):
 
 clear_screen()
 if IS_DEV_BUILD:
-    print(f"Welcome to {Fore.CYAN}Gambling Simulator{Style.RESET_ALL} dev-1.11!\nThis is a developer build and may be unfinished or broken.\n\nPress [ENTER] to continue")
+    print(f"Welcome to {Fore.CYAN}Gambling Simulator{Style.RESET_ALL} dev-1.11!\nThis is a developer build and may be unfinished or broken.\n\nPress {btn('enter')} to continue")
 else:
-    print("Welcome to Gambling Simulator v1.10!\n\nPress [ENTER] to continue")
+    print(f"Welcome to Gambling Simulator v1.10!\n\nPress {btn('enter')} to continue")
 input("")
 
 while is_running:
@@ -1356,7 +1358,7 @@ while is_running:
     if player_credits < 0:
         player_credits = 0
 
-    print("\nPress [ENTER] to continue")
+    print(f"\nPress {btn('enter')} to continue")
     input("")
 
     clear_screen()
@@ -1422,13 +1424,13 @@ while is_running:
                         name += f"{i.capitalize()} "
                     print("Bonus Achievement Unlocked:", name)
 
-        input("\n[ENTER] to continue\n")
+        input(f"\n{btn('enter')} to continue\n")
 
     if total_won >= 50000 and not is_high_roller:
             is_high_roller = True
             clear_screen()
             print("You can now visit the High Rollers club!")
-            input("\n[ENTER] to continue\n")
+            input(f"\n{btn('enter')} to continue\n")
 
     if player_credits <= 0:
         pass
