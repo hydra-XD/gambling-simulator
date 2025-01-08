@@ -2,6 +2,7 @@ import random
 import time
 import os
 import types
+from colorama import Fore, Back, Style
 
 # Debug
 IS_DEV_BUILD = True
@@ -72,6 +73,9 @@ loans_paid = 0
 has_borrow = False
 has_borrowed = False
 borrow_amount = 0
+
+# Checks
+ach_x = f"{Fore.MAGENTA}x{Style.RESET_ALL}"
 
 achievements = {
 
@@ -263,41 +267,41 @@ def display_achievements():
     print(f"""
 You've Unlocked [{a}/{len(achievements)}] Achievements ({p}%) {"(Cheats used)" if console_used else ""}
     
-    [{"x" if achievements["getting_somewhere"] else " "}] Getting Somewhere (Win a spin)
-    [{"x" if achievements["on_a_roll"] else " "}] On a Roll (Win a total of 1,000 credits)
-    [{"x" if achievements["a_decent_sum"] else " "}] A Decent Sum (Win a total of 10,000 credits)
-    [{"x" if achievements["rolling_in_dough"] else " "}] Rolling in Dough (Win a total of 100,000 credits)
-    [{"x" if achievements["millionaire"] else " "}] Millionaire (Win a total of 1,000,000 credits)
+    [{ach_x if achievements["getting_somewhere"] else " "}] Getting Somewhere (Win a spin)
+    [{ach_x if achievements["on_a_roll"] else " "}] On a Roll (Win a total of 1,000 credits)
+    [{ach_x if achievements["a_decent_sum"] else " "}] A Decent Sum (Win a total of 10,000 credits)
+    [{ach_x if achievements["rolling_in_dough"] else " "}] Rolling in Dough (Win a total of 100,000 credits)
+    [{ach_x if achievements["millionaire"] else " "}] Millionaire (Win a total of 1,000,000 credits)
 
-    [{"x" if achievements["oof_moment"] else " "}] Oof Moment (Lose a spin)
-    [{"x" if achievements["you_should_stop"] else " "}] You Should Stop (Lose a total of 1,000 credits)
-    [{"x" if achievements["you_should_REALLY_stop"] else " "}] You Should REALLY Stop (Lose a total of 10,000 credits)
-    [{"x" if achievements["you're_just_gonna_lose_more"] else " "}] You're Just Gonna Lose More (Lose a total of 100,000 credits)
-    [{"x" if achievements["rock_bottom"] else " "}] Rock Bottom (Lose a total of 1,000,000 credits)
+    [{ach_x if achievements["oof_moment"] else " "}] Oof Moment (Lose a spin)
+    [{ach_x if achievements["you_should_stop"] else " "}] You Should Stop (Lose a total of 1,000 credits)
+    [{ach_x if achievements["you_should_REALLY_stop"] else " "}] You Should REALLY Stop (Lose a total of 10,000 credits)
+    [{ach_x if achievements["you're_just_gonna_lose_more"] else " "}] You're Just Gonna Lose More (Lose a total of 100,000 credits)
+    [{ach_x if achievements["rock_bottom"] else " "}] Rock Bottom (Lose a total of 1,000,000 credits)
     
-    [{"x" if achievements["confidence_is_key"] else " "}] Confidence is Key (Go all in on a spin)
-    [{"x" if achievements["i_can't_stop_winning"] else " "}] I Can't Stop Winning! (Win an all-in spin)
-    [{"x" if achievements["aw_dangit"] else " "}] Aw Dangit! (Lose an all-in spin)
+    [{ach_x if achievements["confidence_is_key"] else " "}] Confidence is Key (Go all in on a spin)
+    [{ach_x if achievements["i_can't_stop_winning"] else " "}] I Can't Stop Winning! (Win an all-in spin)
+    [{ach_x if achievements["aw_dangit"] else " "}] Aw Dangit! (Lose an all-in spin)
     
-    [{"x" if achievements["at_least_i_still_have_clothes"] else " "}] At Least I Still Have Clothes (Take out a loan)
-    [{"x" if achievements["petty_cash"] else " "}] Petty Cash (Take out a loan less than or equal to 10 credits)
-    [{"x" if achievements["money_management"] else " "}] Money Management (Pay back a loan)
-    [{"x" if achievements["still_hanging_in_there"] else " "}] Still Hanging in There (Take out another loan) 
-    [{"x" if achievements["redemption_arc"] else " "}] Redemption Arc (Pay back three loans)
+    [{ach_x if achievements["at_least_i_still_have_clothes"] else " "}] At Least I Still Have Clothes (Take out a loan)
+    [{ach_x if achievements["petty_cash"] else " "}] Petty Cash (Take out a loan less than or equal to 10 credits)
+    [{ach_x if achievements["money_management"] else " "}] Money Management (Pay back a loan)
+    [{ach_x if achievements["still_hanging_in_there"] else " "}] Still Hanging in There (Take out another loan) 
+    [{ach_x if achievements["redemption_arc"] else " "}] Redemption Arc (Pay back three loans)
 
-    [{"x" if achievements["i_feel_funny"] else " "}] I Feel Funny (Buy from the bar)
-    [{"x" if achievements["big_spender"] else " "}] Big Spender (Spend 1,000 credits at the bar)
-    [{"x" if achievements["i'll_have_the_regular"] else " "}] I'll Have the Regular (Spend 10,000 credits at the bar)
-    [{"x" if achievements["writing_checks_left_and_right"] else " "}] Writing Checks Left and Right (Spend 100,000 credits at the bar)
-    [{"x" if achievements["overload"] else " "}] Overload (Max out on energy drinks)
+    [{ach_x if achievements["i_feel_funny"] else " "}] I Feel Funny (Buy from the bar)
+    [{ach_x if achievements["big_spender"] else " "}] Big Spender (Spend 1,000 credits at the bar)
+    [{ach_x if achievements["i'll_have_the_regular"] else " "}] I'll Have the Regular (Spend 10,000 credits at the bar)
+    [{ach_x if achievements["writing_checks_left_and_right"] else " "}] Writing Checks Left and Right (Spend 100,000 credits at the bar)
+    [{ach_x if achievements["overload"] else " "}] Overload (Max out on energy drinks)
 
-    [{"x" if achievements["insured"] else " "}] Insured (Purchase an insurance plan)
-    [{"x" if achievements["volatile"] else " "}] Volatile (Make your insurance rate rise)
-    [{"x" if achievements["the_bills_caught_up_to_you"] else " "}] The Bills Caught Up to You (Miss an insurance payment)
+    [{ach_x if achievements["insured"] else " "}] Insured (Purchase an insurance plan)
+    [{ach_x if achievements["volatile"] else " "}] Volatile (Make your insurance rate rise)
+    [{ach_x if achievements["the_bills_caught_up_to_you"] else " "}] The Bills Caught Up to You (Miss an insurance payment)
 
-    [{"x" if achievements["your_family_is_worried"] else " "}] Your Family is Worried (Spend 14 days gambling)
-    [{"x" if achievements["concerning_hygeine"] else " "}] Concerning Hygeine (Spend 50 days gambling)
-    [{"x" if achievements["what_year_is_it"] else " "}] What Year is It? (Spend 100 days gambling)""")
+    [{ach_x if achievements["your_family_is_worried"] else " "}] Your Family is Worried (Spend 14 days gambling)
+    [{ach_x if achievements["concerning_hygeine"] else " "}] Concerning Hygeine (Spend 50 days gambling)
+    [{ach_x if achievements["what_year_is_it"] else " "}] What Year is It? (Spend 100 days gambling)""")
 
     if achievements["the_light_is_blinding"]:
         print("    [x] The Light is Blinding (Leave the casino after 100 days)")
@@ -312,17 +316,17 @@ You've Unlocked [{a}/{len(achievements)}] Achievements ({p}%) {"(Cheats used)" i
         print(f"\nYou've unlocked [{b}/{t}] Bonus Achievements\n")
 
         if bonus_achievements["counting_cards"]:
-            print("    [x] Counting Cards (Use the developer console, you nasty cheater)")
+            print(f"    [{Fore.CYAN}x{Style.RESET_ALL}] Counting Cards (Use the developer console, you nasty cheater)")
         if bonus_achievements["extra_zesty"]:
-            print("    [x] Extra Zesty (See all flavor texts on the home screen)")
+            print(f"    [{Fore.CYAN}x{Style.RESET_ALL}] Extra Zesty (See all flavor texts on the home screen)")
         if bonus_achievements["regular_patron"]:
-            print("    [x] Regular Patron (See all Bartender dialogues)")
+            print(f"    [{Fore.CYAN}x{Style.RESET_ALL}] Regular Patron (See all Bartender dialogues)")
         if bonus_achievements["back_from_the_brink"]:
-            print("    [x] Back from the Brink (Win 'The Deal')")
+            print(f"    [{Fore.CYAN}x{Style.RESET_ALL}] Back from the Brink (Win 'The Deal')")
         if bonus_achievements["last_resort"]:
-            print("    [x] Last Resort (Sell your kidney)")
+            print(f"    [{Fore.CYAN}x{Style.RESET_ALL}] Last Resort (Sell your kidney)")
         if bonus_achievements["shifty_business"]:
-            print("    [x] Shifty Business (Buy a fake ID)")    
+            print(f"    [{Fore.CYAN}x{Style.RESET_ALL}] Shifty Business (Buy a fake ID)")    
 
 
 def get_variable_type(var):
@@ -393,6 +397,13 @@ def devtools():
                 except:
                     print(f"Function '{function}' not found")
                     break
+        if menu == "completion":
+            menu = input("Press [ENTER] to enable all achievements or 'cancel' to go back ")
+            for i in achievements:
+                achievements[i] = True
+            for i in bonus_achievements:
+                bonus_achievements[i] = True
+            break
         if menu == "achievement":
             while True:
                 try:
@@ -603,11 +614,11 @@ Welcome to the Gambler's Insurance Shop!
 Credits: {player_credits:,}
 
 Here are our plans:
-    [{"x" if insurance_type == 0 else " "}] No Plan
-    [{"x" if insurance_type == 1 else " "}] Starter Plan (Starts at 5 credits/day, 5% coverage)
-    [{"x" if insurance_type == 2 else " "}] Basic Plan (Starts at 10 credits/day, 10% coverage)
-    [{"x" if insurance_type == 3 else " "}] Hobbyist Plan (Starts at 50 credits/day, 25% coverage)
-    [{"x" if insurance_type == 4 else " "}] Gambler's Dream (Starts at 250 credits/day, 50% coverage)
+    [{ach_x if insurance_type == 0 else " "}] No Plan
+    [{ach_x if insurance_type == 1 else " "}] Starter Plan (Starts at 5 credits/day, 5% coverage)
+    [{ach_x if insurance_type == 2 else " "}] Basic Plan (Starts at 10 credits/day, 10% coverage)
+    [{ach_x if insurance_type == 3 else " "}] Hobbyist Plan (Starts at 50 credits/day, 25% coverage)
+    [{ach_x if insurance_type == 4 else " "}] Gambler's Dream (Starts at 250 credits/day, 50% coverage)
 
 NOTE: All plans require a down payment equal to 10 times their starting rate
       Rate increases based on how much your insurance has covered
@@ -1201,7 +1212,7 @@ def game_over(source):
 
 clear_screen()
 if IS_DEV_BUILD:
-    print("Welcome to Gambling Simulator dev-1.11!\nThis is a developer build and may be unfinished or broken.\n\nPress [ENTER] to continue")
+    print(f"Welcome to {Fore.CYAN}Gambling Simulator{Style.RESET_ALL} dev-1.11!\nThis is a developer build and may be unfinished or broken.\n\nPress [ENTER] to continue")
 else:
     print("Welcome to Gambling Simulator v1.10!\n\nPress [ENTER] to continue")
 input("")
