@@ -141,27 +141,27 @@ flavor_text = [
     {"days_start": 0, "days_end": 1, "text": "You can practically taste your winnings already.", "displayed": False},
     {"days_start": 2, "days_end": 5, "text": "You haven't been here very long, but you feel like you could stay forever.", "displayed": False},
     {"days_start": 6, "days_end": 9, "text": "You begin to notice a regular deposit of crumbs at your machine. Are they yours?", "displayed": False},
-    {"days_start": 10, "days_end": 14, "text": "The handle on the machine is getting greasy. You should wash your hands.", "displayed": False},
-    {"days_start": 15, "days_end": 19, "text": "Your back is weary of hunching over the machine. Taking a walk might help.", "displayed": False},
-    {"days_start": 20, "days_end": 24, "text": "You haven't seen the sun in quite a while.", "displayed": False},
+    {"days_start": 10, "days_end": 14, "text": f"The handle on the machine is getting {Style.DIM}greasy{Style.RESET_ALL}. You should wash your hands.", "displayed": False},
+    {"days_start": 15, "days_end": 19, "text": f"Your back is {Style.DIM}weary{Style.RESET_ALL} of hunching over the machine. Taking a walk might help.", "displayed": False},
+    {"days_start": 20, "days_end": 24, "text": f"You haven't seen the {Style.BRIGHT}{Fore.YELLOW}sun{Style.RESET_ALL} in quite a while.", "displayed": False},
     {"days_start": 25, "days_end": 54, "text": "Are you satisfied yet?", "displayed": False},
-    {"days_start": 55, "days_end": 94, "text": "Your committment would be inspiring, were it not an addiction.", "displayed": False},
+    {"days_start": 55, "days_end": 94, "text": f"Your committment would be inspiring, were it not an {Fore.RED}addiction{Style.RESET_ALL}.", "displayed": False},
     {"days_start": 95, "days_end": 100, "text": "Is the casino still real?", "displayed": False}
 ]
 
 bar_dialogue = [
     '"Hey there, care for a drink?"',
-    '"How are the winnings?"',
+    f'"How are the {Fore.GREEN}winnings{Style.RESET_ALL}?"',
     '"Good day, huh?"',
     '"Business is slow today. Take a look."',
     '"What\'s new?"',
-    '"Every day\'s a good day to get drunk."',
+    f'"Every day\'s a good day to get {Fore.GREEN}drunk{Style.RESET_ALL}."',
     '"How\'re the kids?"',
     '"My husband says I need to get a real job."',
     '"Rough day, huh?"',
-    '"Here, have a beer on me."',
+    f'"Here, have a {Fore.YELLOW}beer{Style.RESET_ALL} on me."',
     '"Kids these days..."',
-    '"Went to college for physics, why am I here?"',
+    f'"Went to college for {Fore.BLUE}physics{Style.RESET_ALL}, why am I here?"',
     '"Everyone leaves eventually. Will you?"'
 ]
 
@@ -169,9 +169,9 @@ bar_actions = [
     "The bartender looks up and says, ",
     "The bartender doesn't look up when you enter.",
     "The bartender seems engrossed in cleaning a glass. He doesn't appear to notice you.",
-    "The bartender is wiping down the counter - the room smells vaguely of cleaning chemicals and vomit.",
-    "The bartender isn't in. There's a sign that says: \"Leave the money on the counter. Help yourself.\"",
-    "The bartender isn't in. There's a woman at the counter who eyes you with an emotion you can't decipher."
+    f"The bartender is wiping down the counter - the room smells vaguely of {Fore.CYAN}cleaning chemicals{Style.RESET_ALL} and {Fore.GREEN}vomit{Style.RESET_ALL}.",
+    f"The bartender isn't in. There's a sign that says: \"Leave the {Fore.YELLOW}money{Style.RESET_ALL} on the counter. Help yourself.\"",
+    f"The bartender isn't in. There's a {Fore.RED}woman{Style.RESET_ALL} at the counter who eyes you with an {Fore.MAGENTA}emotion{Style.RESET_ALL} you can't decipher."
 ]
 
 
@@ -184,7 +184,7 @@ def pick_flavor_text():
                 return f["text"]
             else:
                 return "Just another day in the casino."
-    return "Just another day in the casino."
+        return "Just another day in the casino."
 
 # Clear the screen
 def clear_screen():
@@ -263,9 +263,13 @@ def display_achievements():
         p = round((100 * (a / len(achievements))))
     except ZeroDivisionError:
         p = 0
+    if p == 100:
+        p = f"{Fore.GREEN}100%{Style.RESET_ALL}"
+    else:
+        p = f"{p}%"
 
     print(f"""
-You've Unlocked [{a}/{len(achievements)}] Achievements ({p}%) {"(Cheats used)" if console_used else ""}
+You've Unlocked [{f"{Fore.GREEN}{a}/{len(achievements)}{Style.RESET_ALL}" if a == len(achievements) else f"{a}/{len(achievements)}"}] Achievements ({p}) {f"({Fore.RED}Cheats used{Style.RESET_ALL})" if console_used else ""}
     
     [{ach_x if achievements["getting_somewhere"] else " "}] Getting Somewhere (Win a spin)
     [{ach_x if achievements["on_a_roll"] else " "}] On a Roll (Win a total of 1,000 credits)
@@ -304,7 +308,7 @@ You've Unlocked [{a}/{len(achievements)}] Achievements ({p}%) {"(Cheats used)" i
     [{ach_x if achievements["what_year_is_it"] else " "}] What Year is It? (Spend 100 days gambling)""")
 
     if achievements["the_light_is_blinding"]:
-        print("    [x] The Light is Blinding (Leave the casino after 100 days)")
+        print(f"    [{Fore.MAGENTA}{Style.BRIGHT}x{Style.RESET_ALL}] The Light is Blinding (Leave the casino after 100 days)")
 
     b = 0 
     for i in bonus_achievements.keys():
@@ -313,7 +317,10 @@ You've Unlocked [{a}/{len(achievements)}] Achievements ({p}%) {"(Cheats used)" i
 
     if b > 0:
         t = "?" if b < len(bonus_achievements) else len(bonus_achievements)
-        print(f"\nYou've unlocked [{b}/{t}] Bonus Achievements\n")
+        if b == t:
+            print(f"\nYou've unlocked [{Fore.GREEN}{b}/{t}{Style.RESET_ALL}] Bonus Achievements\n")    
+        else:
+            print(f"\nYou've unlocked [{b}/{t}] Bonus Achievements\n")
 
         if bonus_achievements["counting_cards"]:
             print(f"    [{Fore.CYAN}x{Style.RESET_ALL}] Counting Cards (Use the developer console, you nasty cheater)")
@@ -403,7 +410,6 @@ def devtools():
                 achievements[i] = True
             for i in bonus_achievements:
                 bonus_achievements[i] = True
-            break
         if menu == "achievement":
             while True:
                 try:
@@ -472,7 +478,7 @@ def display_home_screen():
     global insurance_payment
     while True:
         clear_screen()
-        print(f"Credits: {player_credits:,}")
+        print(f"Credits: {Fore.YELLOW}{player_credits:,}{Style.RESET_ALL}")
         print("")
         print(("-" * 20))
         try:
@@ -611,7 +617,7 @@ def insurance_shop():
         f"""
 Welcome to the Gambler's Insurance Shop!
 
-Credits: {player_credits:,}
+Credits: {Fore.YELLOW}{player_credits:,}{Style.RESET_ALL}
 
 Here are our plans:
     [{ach_x if insurance_type == 0 else " "}] No Plan
@@ -937,7 +943,7 @@ def visit_shop():
     else:
         print(bar_actions[dialogue])
 
-    print(f"\nCredits: {player_credits:,}")
+    print(f"\nCredits: {Fore.YELLOW}{player_credits:,}{Style.RESET_ALL}")
     print(f"""
     -- MENU --
     Beer: +5% Reward Multiplier (Cost: {reward_upgrade_price})
@@ -1244,7 +1250,7 @@ while is_running:
         if days_passed == 3:
             print("You need to pay back your loan!")
             print(f"Your loan payment is: {loan_payment:,}")
-            print(f"Credits: {player_credits:,}")
+            print(f"Credits: {Fore.YELLOW}{player_credits:,}{Style.RESET_ALL}")
         if days_passed == 4:
             visit_bank()
         days_passed += 1
@@ -1283,7 +1289,7 @@ while is_running:
     else:
         while bet < 1 or not isinstance(bet, int) or bet > player_credits:
             try:
-                print(f"Credits: {player_credits:,}")
+                print(f"Credits: {Fore.YELLOW}{player_credits:,}{Style.RESET_ALL}")
                 bet = int(input("Bet: "))
                 if bet > player_credits:
                     print("You don't have enough money for that")
