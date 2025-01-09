@@ -54,7 +54,7 @@ _B=False
 _A=True
 import random,time,os,types
 from colorama import Fore,Back,Style
-IS_DEV_BUILD=_A
+IS_DEV_BUILD=_B
 console_used=_B
 suppress=_B
 is_running=_A

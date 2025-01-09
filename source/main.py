@@ -5,7 +5,7 @@ import types
 from colorama import Fore, Back, Style
 
 # Debug
-IS_DEV_BUILD = True
+IS_DEV_BUILD = False
 console_used = False
 suppress = False
 
