@@ -617,23 +617,23 @@ def insurance_shop():
     clear_screen()
     print(
         f"""
-Welcome to the Gambler's Insurance Shop!
+Welcome to the {Fore.YELLOW}Gambler's Insurance{Style.RESET_ALL} Shop!
 
 Credits: {Fore.YELLOW}{player_credits:,}{Style.RESET_ALL}
 
 Here are our plans:
     [{ach_x if insurance_type == 0 else " "}] No Plan
-    [{ach_x if insurance_type == 1 else " "}] Starter Plan (Starts at 5 credits/day, 5% coverage)
-    [{ach_x if insurance_type == 2 else " "}] Basic Plan (Starts at 10 credits/day, 10% coverage)
-    [{ach_x if insurance_type == 3 else " "}] Hobbyist Plan (Starts at 50 credits/day, 25% coverage)
-    [{ach_x if insurance_type == 4 else " "}] Gambler's Dream (Starts at 250 credits/day, 50% coverage)
+    [{ach_x if insurance_type == 1 else " "}] Starter Plan (Starts at {Fore.YELLOW}5{Style.RESET_ALL} credits/day, {Fore.GREEN}5%{Style.RESET_ALL} coverage)
+    [{ach_x if insurance_type == 2 else " "}] Basic Plan (Starts at {Fore.YELLOW}10{Style.RESET_ALL} credits/day, {Fore.GREEN}10%{Style.RESET_ALL} coverage)
+    [{ach_x if insurance_type == 3 else " "}] Hobbyist Plan (Starts at {Fore.YELLOW}50{Style.RESET_ALL} credits/day, {Fore.GREEN}25%{Style.RESET_ALL} coverage)
+    [{ach_x if insurance_type == 4 else " "}] Gambler's Dream (Starts at {Fore.YELLOW}250{Style.RESET_ALL} credits/day, {Fore.GREEN}50%{Style.RESET_ALL} coverage)
 
 NOTE: All plans require a down payment equal to 10 times their starting rate
       Rate increases based on how much your insurance has covered
         """
     )
     while True:
-        option = input("Choose a plan or type 'pass' to leave\n>> ").lower()
+        option = input(f"Choose a plan or type '{Style.DIM}pass{Style.RESET_ALL}' to leave\n>> ").lower()
         if option == "pass":
             return
         elif option == "no plan":
@@ -879,17 +879,17 @@ def high_rollers():
         clear_screen()
         print("Welcome to the High Rollers club")
         print(f"You have {roulette_chips} chips")
-        menu = input("\ntype 'chips' to buy more chips, 'credits' to cash in chips, or 'spin' to play roulette. 'pass' to leave\n>> ")
+        menu = input(f"\ntype 'chips' to buy more chips, 'credits' to cash in chips, 'spin' to play roulette, or '{Style.DIM}pass{Style.RESET_ALL}' to leave\n>> ")
         if menu == "chips":
             clear_screen()
             print("Credits:", player_credits)
             print("Exchange rate: 1 Chip for 5 Credits")
             while True:
-                amount = input("Enter an amount of chips to buy. 'pass' to leave\n>> ")
+                amount = input(f"Enter a number of chips to buy or '{Style.DIM}pass{Style.RESET_ALL}' to leave\n>> ")
                 if amount == "pass" or (amount.isnumeric() and int(amount) > 0):
                     pass
                 else:
-                    print("Enter a non-zero numeric value or 'pass'")
+                    print(f"Enter a non-zero numeric value or '{Style.DIM}pass{Style.RESET_ALL}'")
                     continue
                 
                 if amount == "pass": 
@@ -897,7 +897,7 @@ def high_rollers():
                 else:
                     amount = round(int(amount))
                     if amount * 5 > player_credits:
-                        print("You can't afford that many chips!")
+                        print(f"{Fore.RED}You can't afford that many chips!{Style.RESET_ALL}")
                         continue
                     else:
                         player_credits -= amount * 5
@@ -909,17 +909,17 @@ def high_rollers():
             clear_screen()
             print(f"You have {roulette_chips} chips")
             while True:
-                amount = input("Enter an amount of chips to cash in. 'pass' to leave\n>> ")
+                amount = input(f"Enter a number of chips to cash in or '{Style.DIM}pass{Style.RESET_ALL}' to leave\n>> ")
                 if amount == "pass" or (amount.isnumeric() and int(amount) > 0):
                     pass
                 else:
-                    print("Enter a non-zero numeric value or 'pass'")
+                    print(f"Enter a non-zero numeric value or '{Style.DIM}pass{Style.RESET_ALL}'")
                     continue
                 if amount == "pass": break
                 else:
                     amount = round(int(amount))
                     if amount > roulette_chips:
-                        print("You can't afford that many chips!")
+                        print(f"{Fore.RED}You can't afford that many chips!{Style.RESET_ALL}")
                         continue
                     else:
                         player_credits += round(amount / 5)
@@ -953,7 +953,7 @@ def visit_shop():
     Hot Dog: +{Fore.CYAN}0.1 Streak Multiplier{Style.RESET_ALL} (Cost: {Fore.YELLOW}{streak_upgrade_price}{Style.RESET_ALL})
     Energy Drink: -{Fore.GREEN}1s Wheel Spin Time{Style.RESET_ALL} [{Fore.GREEN Style.BRIGHT if speed_upgrades >= 5 else ""}{speed_upgrades+1 if speed_upgrades < 5 else 5}/5{Style.RESET_ALL}] (Cost: {Fore.YELLOW}{speed_upgrade_price}{Style.RESET_ALL})
     """)
-    print("Type 'buy <item name>' to buy an item or 'pass' to leave")
+    print(f"Type 'buy <item name>' to buy an item or '{Style.DIM}pass{Style.RESET_ALL}' to leave")
     while True:
         in_ = input(">> ")
         if in_ == "pass":
@@ -1440,9 +1440,9 @@ while is_running:
             if spins >= 25 and not fake_id:
                 black_market()
             if not is_high_roller:
-                print("Type 'shop' to visit the shop, 'insurance' to buy insurance, or 'pass' to leave")
+                print(f"Type 'shop' to visit the shop, 'insurance' to buy insurance, or '{Style.DIM}pass{Style.RESET_ALL}' to leave")
             else:
-                print("Type 'shop' to visit the shop, 'insurance' to buy insurance, 'high roller' to visit the High Rollers club, or 'pass' to leave")
+                print(f"Type 'shop' to visit the shop, 'insurance' to buy insurance, 'high roller' to visit the High Rollers club, or '{Style.DIM}pass{Style.RESET_ALL}' to leave")
             in_ = input(">> ")
             if in_ == "shop":
                 visit_shop()
