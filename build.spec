@@ -6,7 +6,7 @@ WORKPATH = os.path.join('build')  # Specify your custom build folder
 a = Analysis(['build/main.min.py'],
              pathex=[],
              binaries=[],
-             datas=[('source/README.md', '.')],
+             datas=[('', '.')],
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
@@ -15,7 +15,7 @@ pyz = PYZ(a.pure, a.zipped_data, cipher=block_cipher)
 exe = EXE(pyz,
           a.scripts,
           [],
-          name='gambling_simulator_v1_11',
+          name='gambling_simulator_v1_12',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
@@ -29,7 +29,7 @@ coll = COLLECT(exe,
                strip=False,
                upx=True,
                upx_exclude=[],
-               name='Gambling Simulator v1.11')
+               name='Gambling Simulator v1.12')
 
 coll.distpath = DISTPATH
 coll.workpath = WORKPATH

@@ -485,12 +485,12 @@ def display_home_screen():
         print(("-" * 20))
         try:
             win_percentage = 100 * (wins / spins)
-            print("\n" + Fore.GREEN + "Win%" + Style.RESET_ALL + ": " + str(round(win_percentage, 2)) + "%")
+            print("\n" + Fore.GREEN + "Win%" + Style.RESET_ALL + ":               " + str(round(win_percentage, 2)) + "%")
         except ZeroDivisionError:
-            print(f" \n{Fore.GREEN}Win%{Style.RESET_ALL}: N/A")
-        print(Fore.YELLOW + "Reward Multiplier" + Style.RESET_ALL + ":", round(reward_multiplier, 2))
-        print(Fore.MAGENTA + "Luck" + Style.RESET_ALL + ":", luck)
-        print(Fore.CYAN + "Streak Multiplier" + Style.RESET_ALL + ":", round(streak_multiplier, 1), "\n")
+            print(f" \n{Fore.GREEN}Win%{Style.RESET_ALL}:               N/A")
+        print(Fore.YELLOW + "Reward Multiplier" + Style.RESET_ALL + ": ", round(reward_multiplier, 2))
+        print(Fore.MAGENTA + "Luck" + Style.RESET_ALL + ":              ", float(luck))
+        print(Fore.CYAN + "Streak Multiplier" + Style.RESET_ALL + ": ", round(streak_multiplier, 1), "\n")
         print(("-" * 20))
         if has_insurance:
             if insurance_type == 1:
@@ -527,7 +527,7 @@ def display_home_screen():
                 return
         elif spins >= 100:
             menu_ = input(
-                f"\nType 'achievements' to view your achievements, press {btn('enter')} to spin, or type 'leave' to escape\n>> ")
+                f"\nType 'achievements' to view your achievements, press {btn('enter')} to spin, or type '{Fore.GREEN}leave{Style.RESET_ALL}' to {Fore.GREEN}escape{Style.RESET_ALL}\n>> ")
 
             if menu_ == "achievements":
                 display_achievements()
@@ -553,10 +553,20 @@ def get_letters() -> list:
     else:
         c = b if random.randint(1, round(15 - luck / 2)
                                 ) == 1 else letters[random.randint(0, 25)]
+
+        colora = a
+        colorb = b
+        colorc = c
+
+    if (a + b + c).upper() in bonuses:
+        colora = Fore.MAGENTA + a + Style.RESET_ALL
+        colorb = Fore.MAGENTA + b + Style.RESET_ALL
+        colorc = Fore.MAGENTA + c + Style.RESET_ALL
+
     print(f"""
     ===================
     |     |     |     |
-    |  {a}  |  {b}  |  {c}  |
+    |  {colora}  |  {colorb}  |  {colorc}  |
     |     |     |     |
     ===================
     """)
@@ -628,7 +638,7 @@ Here are our plans:
     [{ach_x if insurance_type == 3 else " "}] Hobbyist Plan (Starts at {Fore.YELLOW}50{Style.RESET_ALL} credits/day, {Fore.GREEN}25%{Style.RESET_ALL} coverage)
     [{ach_x if insurance_type == 4 else " "}] Gambler's Dream (Starts at {Fore.YELLOW}250{Style.RESET_ALL} credits/day, {Fore.GREEN}50%{Style.RESET_ALL} coverage)
 
-NOTE: All plans require a down payment equal to 10 times their starting rate
+NOTE: All plans require a down payment equal to {Fore.YELLOW}10 times their starting rate{Style.RESET_ALL}
       Rate increases based on how much your insurance has covered
         """
     )
@@ -644,7 +654,7 @@ NOTE: All plans require a down payment equal to 10 times their starting rate
             break
         elif option == "starter plan" or option == "starter":
             if player_credits <= 50:
-                print("You can't afford that plan!")
+                print(f"{Fore.RED}You can't afford that plan!{Style.RESET_ALL}")
                 continue
             has_insurance = True
             insurance_type = 1
@@ -654,7 +664,7 @@ NOTE: All plans require a down payment equal to 10 times their starting rate
             break
         elif option == "basic plan" or option == "basic":
             if player_credits <= 100:
-                print("You can't afford that plan!")
+                print(f"{Fore.RED}You can't afford that plan!{Style.RESET_ALL}")
                 continue
             has_insurance = True
             insurance_type = 2
@@ -664,7 +674,7 @@ NOTE: All plans require a down payment equal to 10 times their starting rate
             break
         elif option == "hobbyist plan" or option == "hobbyist":
             if player_credits <= 500:
-                print("You can't afford that plan!")
+                print(f"{Fore.RED}You can't afford that plan!{Style.RESET_ALL}")
                 continue
             has_insurance = True
             insurance_type = 3
@@ -674,7 +684,7 @@ NOTE: All plans require a down payment equal to 10 times their starting rate
             break
         elif option == "gambler's dream" or option == "gambler's" or option == "gambler":
             if player_credits <= 2500:
-                print("You can't afford that plan!")
+                print(f"{Fore.RED}You can't afford that plan!{Style.RESET_ALL}")
                 continue
             has_insurance = True
             insurance_type = 4
@@ -843,13 +853,14 @@ Dozen Three     (25-36)
         clear_screen()
 
         color, number = roulette_spin()
-        print("Spin: " + color.title() + " " + number)
+        c = f"{Style.DIM}{Fore.BLACK}" if color == "black" else f"{Style.BRIGHT}{Fore.RED}"
+        print("Spin: " + c + color.title() + " " + number + Style.RESET_ALL)
 
         reward = get_roulette_reward(bet_type, x, bet_amount, color, number)
         roulette_chips += reward
 
-        print("Reward: " + str(reward))
-        print("Chips: " + str(roulette_chips))
+        print(Fore.GREEN + "Reward: " + str(reward) + Style.RESET_ALL)
+        print(Fore.YELLOW + "Chips: " + str(roulette_chips) + Style.RESET_ALL)
 
         menu = input(f"'leave' to leave or {btn('enter')} to continue")
 
@@ -861,7 +872,7 @@ Dozen Three     (25-36)
 
         if roulette_chips <= 0:
             clear_screen()
-            print("You have run out of roulette chips.")
+            print(f"{Fore.RED}You have run out of roulette chips.{Style.RESET_ALL}")
             break
 
 
@@ -871,18 +882,18 @@ def high_rollers():
     clear_screen()
 
     if not is_high_roller:
-        print("You don't have a membership card. \nThe bouncer turns you away.")
+        print(f"You don't have a {Fore.CYAN}membership card{Style.RESET_ALL}. \nThe bouncer {Fore.RED}turns you away{Style.RESET_ALL}.")
         input(f"\n{btn('enter')} to continue\n")
         return
 
-    while True:  
+    while True:
         clear_screen()
-        print("Welcome to the High Rollers club")
+        print(f"Welcome to the {Fore.MAGENTA}High Rollers club!{Style.RESET_ALL}")
         print(f"You have {roulette_chips} chips")
         menu = input(f"\ntype 'chips' to buy more chips, 'credits' to cash in chips, 'spin' to play roulette, or '{Style.DIM}pass{Style.RESET_ALL}' to leave\n>> ")
         if menu == "chips":
             clear_screen()
-            print("Credits:", player_credits)
+            print(f"Credits: {Fore.YELLOW}{player_credits:,}{Style.RESET_ALL}")
             print("Exchange rate: 1 Chip for 5 Credits")
             while True:
                 amount = input(f"Enter a number of chips to buy or '{Style.DIM}pass{Style.RESET_ALL}' to leave\n>> ")
@@ -951,7 +962,7 @@ def visit_shop():
     Beer: +{Fore.YELLOW}5% Reward Multiplier{Style.RESET_ALL} (Cost: {Fore.YELLOW}{reward_upgrade_price}{Style.RESET_ALL})
     Fries: +{Fore.MAGENTA}0.5 Luck{Style.RESET_ALL} (Cost: {Fore.YELLOW}{luck_upgrade_price}{Style.RESET_ALL})
     Hot Dog: +{Fore.CYAN}0.1 Streak Multiplier{Style.RESET_ALL} (Cost: {Fore.YELLOW}{streak_upgrade_price}{Style.RESET_ALL})
-    Energy Drink: -{Fore.GREEN}1s Wheel Spin Time{Style.RESET_ALL} [{Fore.GREEN Style.BRIGHT if speed_upgrades >= 5 else ""}{speed_upgrades+1 if speed_upgrades < 5 else 5}/5{Style.RESET_ALL}] (Cost: {Fore.YELLOW}{speed_upgrade_price}{Style.RESET_ALL})
+    Energy Drink: -{Fore.GREEN}1s Wheel Spin Time{Style.RESET_ALL} [{f"{Fore.GREEN}{Style.BRIGHT}" if speed_upgrades >= 5 else ""}{speed_upgrades if speed_upgrades < 5 else 5}/5{Style.RESET_ALL}] (Cost: {Fore.YELLOW}{speed_upgrade_price}{Style.RESET_ALL})
     """)
     print(f"Type 'buy <item name>' to buy an item or '{Style.DIM}pass{Style.RESET_ALL}' to leave")
     while True:
@@ -991,7 +1002,7 @@ def visit_shop():
                 print(f"{Fore.RED}You can't afford that!{Style.RESET_ALL}")
                 continue
             elif speed_upgrades > 3:
-                print("You can't upgrade this stat anymore!")
+                print(f"{Fore.GREEN}You can't upgrade this stat anymore!{Style.RESET_ALL}")
                 achievements["overload"] = True
                 continue
             else:
@@ -1007,33 +1018,33 @@ def black_market():
     global player_credits, fake_id, bonus_achievements
     if not fake_id:
         clear_screen()
-        print("You notice a strange man hunched in a corner. He's waving at you.")
-        choice = input("Approach him? (y/n)\n>> ")
+        print(f"You notice a {Fore.CYAN}strange man{Style.RESET_ALL} hunched in a corner. He's {Fore.GREEN}waving{Style.RESET_ALL} at you.")
+        choice = input(f"Approach him? ({Fore.GREEN}y{Style.RESET_ALL}/{Fore.RED}n{Style.RESET_ALL})\n>> ")
         if choice.lower() in ["y", "yes"]:
-            print("As you get closer, he pulls a card out of his jacket and shows it to you. It's a fake ID.")
-            print("""
-——————————————————————————————————————————————
-|    /--\     |                              |
-|    \__/     |  NAME: JOHN SMITH            |
-|  _/    \_   |  D.O.B: 9/11/01              |
-|   |    |    |  SEX: M                      |
-|——————————————                              |
-| ID: 841238800856874                        |
-| EYES: BRO                                  |
-| RACE: W                                    |
-| HEIGHT: 7' 25"                             |
-——————————————————————————————————————————————
+            print(f"As you get closer, he pulls a {Fore.CYAN}card{Style.RESET_ALL} out of his jacket and shows it to you. It's a {Fore.GREEN}fake ID{Style.RESET_ALL}.")
+            print(f"""
+{Back.WHITE}{Fore.BLACK}——————————————————————————————————————————————{Style.RESET_ALL}
+{Back.WHITE}{Fore.BLACK}|    /--\     |                              |{Style.RESET_ALL}
+{Back.WHITE}{Fore.BLACK}|    \__/     |  NAME: JOHN SMITH            |{Style.RESET_ALL}
+{Back.WHITE}{Fore.BLACK}|  _/    \_   |  D.O.B: 9/11/01              |{Style.RESET_ALL}
+{Back.WHITE}{Fore.BLACK}|   |    |    |  SEX: M                      |{Style.RESET_ALL}
+{Back.WHITE}{Fore.BLACK}|——————————————                              |{Style.RESET_ALL}
+{Back.WHITE}{Fore.BLACK}| ID: 841238800856874                        |{Style.RESET_ALL}
+{Back.WHITE}{Fore.BLACK}| EYES: BRO                                  |{Style.RESET_ALL}
+{Back.WHITE}{Fore.BLACK}| RACE: W                                    |{Style.RESET_ALL}
+{Back.WHITE}{Fore.BLACK}| HEIGHT: 7' 25"                             |{Style.RESET_ALL}
+{Back.WHITE}{Fore.BLACK}——————————————————————————————————————————————{Style.RESET_ALL}
             """)
-            print("He says he'll sell it to you for the low, low price of 50,000 credits. Hand him the money? (y/n)")
+            print(f"He says he'll {Fore.GREEN}sell it to you{Style.RESET_ALL} for the low, low price of {Fore.YELLOW}50,000 credits{Style.RESET_ALL}. Hand him the money? ({Fore.GREEN}y{Style.RESET_ALL}/{Fore.RED}n{Style.RESET_ALL})")
             choice = input(">> ")
             if choice.lower() in ["y", "yes"]:
                 if player_credits >= 50000:
-                    print("You hand over the credits and recieve the card in return.")
+                    print(f"You hand over the credits and {Fore.YELLOW}recieve the card{Style.RESET_ALL} in return.")
                     fake_id = True
                     player_credits -= 50000
                     bonus_achievements["shifty_business"] = True
                 else:
-                    print("You want it, but you don't have enough money.")
+                    print(f"You want it, but you {Fore.RED}don't have enough money{Style.RESET_ALL}.")
             else:
                 print("You back away without a word.")
         else:
@@ -1042,8 +1053,9 @@ def black_market():
 
     if random.randint(1, 2) == 2: # rolls a chance every visit
         n = random.randint(100, 200)
+        if n >= player_credits: n = player_credits - 1
         player_credits -= n
-        print(f"As you leave, you notice your wallet feels {n} credits lighter than it did a minute ago.")
+        print(f"As you leave, you notice your wallet {Fore.RED}feels {n} credits lighter{Style.RESET_ALL} than it did a minute ago...")
 
 # visit the in-game bank
 def visit_bank():
@@ -1052,8 +1064,8 @@ def visit_bank():
     if not has_loan:
         while True:
             clear_screen()
-            print("Credits:", player_credits)
-            print("Welcome to World Liberty Financial!\nType 'loan <amount>' for a loan")
+            print(f"Credits: {Fore.YELLOW}{player_credits:,}{Style.RESET_ALL}")
+            print(f"Welcome to {Fore.BLUE}World Liberty Financial{Style.RESET_ALL}!\nType 'loan <amount>' for a loan")
             in_ = input(">> ")
             if len(in_.split(" ")) == 1:
                 continue
@@ -1088,9 +1100,9 @@ def visit_bank():
                     if loans_total >= 2:
                         achievements["still_hanging_in_there"] = True
 
-                    print(f"You took out a loan of {amount:,} credits.")
+                    print(f"You took out a loan of {Fore.YELLOW}{amount:,}{Style.RESET_ALL} credits.")
                     if not fake_id:
-                        print("Be prepared to pay it back in three days.")
+                        print(f"Be prepared to pay it back in {Fore.YELLOW}three{Style.RESET_ALL} days.")
                     input(f"\nPress {btn('enter')} to continue\n")
                     return
     else:
@@ -1098,7 +1110,7 @@ def visit_bank():
             return
         else:
             print(
-                f"Time to pay your loan back.\nYour loan payment is {loan_payment:,} credits")
+                f"Time to pay your loan back.\nYour loan payment is {Fore.YELLOW}{loan_payment:,}{Style.RESET_ALL} credits")
             print("Credits:", player_credits)
             input(f"\nPress {btn('enter')} to continue\n")
             if player_credits > loan_payment:
@@ -1124,9 +1136,9 @@ def sell_kidney():
     days_out = random.randint(5,10)
     for i in range(days_out):
         clear_screen()
-        print(f"You decide to sell your {kidney} kidney to continue gambling.")
-        print(f"You manage to get {kidney_value:,} credits for it.")
-        print(f"After {i} days in the hospital, you're back on your feet, itching for more gambling.")    
+        print(f"You decide to {Fore.GREEN}sell your {kidney} kidney{Style.RESET_ALL} to continue gambling.")
+        print(f"You manage to get {Fore.YELLOW}{kidney_value:,}{Style.RESET_ALL} credits for it.")
+        print(f"After {Fore.RED}{i} days in the hospital{Style.RESET_ALL}, you're back on your feet, itching for more {Fore.GREEN}gambling{Style.RESET_ALL}.")    
         time.sleep((random.randint(10,20))/10)
     input(f"Press {btn('enter')} to continue.\n")
 
@@ -1143,23 +1155,23 @@ def borrow_from_spouse():
     borrow_amount = (spins * 1000)
     if spouse == "husband":
         print(
-            f"You break away from the machine to call your husband. He says that he'll let you have {borrow_amount:,} credits, but if you lose with them he'll leave you. Take his deal?")
+            f"You {Fore.RED}break away from the machine{Style.RESET_ALL} to call your husband. He says that he'll let you have {Fore.YELLOW}{borrow_amount:,}{Style.RESET_ALL} credits, but if you lose with them he'll {Fore.RED}leave you{Style.RESET_ALL}. Take his {Fore.YELLOW}deal{Style.RESET_ALL}?")
     if spouse == "wife":
         print(
-            f"You break away from the machine to call your wife. She says that she'll let you have {borrow_amount:,} credits, but if you lose with them she'll leave you. Take her deal?")
+            f"You {Fore.RED}break away from the machine{Style.RESET_ALL} to call your wife. She says that she'll let you have {Fore.YELLOW}{borrow_amount:,}{Style.RESET_ALL} credits, but if you lose with them she'll {Fore.RED}leave you{Style.RESET_ALL}. Take her {Fore.YELLOW}deal{Style.RESET_ALL}?")
 
-    option = input("(y/n) >> ")
+    option = input(f"({Fore.GREEN}y{Style.RESET_ALL}/{Fore.RED}n{Style.RESET_ALL}) >> ")
 
     if option.lower() in ["", "y"]:
         if spouse == "husband":
-            print("You take his money, determined to win it all.")
+            print(f"You take his {Fore.YELLOW}money{Style.RESET_ALL}, determined to {Fore.GREEN}win it all{Style.RESET_ALL}.")
         if spouse == "wife":
-            print("You take her money, determined to win it all.")
+            print(f"You take her {Fore.YELLOW}money{Style.RESET_ALL}, determined to {Fore.GREEN}win it all{Style.RESET_ALL}.")
         has_borrow = True
         player_credits = borrow_amount
         return
     else:
-        print("You hang up and decide to go to the bank instead.")
+        print(f"You {Fore.RED}hang up{Style.RESET_ALL} and decide to go to the bank instead.")
         has_borrowed = True
         visit_bank()
 
@@ -1169,24 +1181,29 @@ def game_over(source):
     clear_screen()
     # end text conditions
 
-    print(f"After {spins} days...")
+    if spins != 1:
+        s = "s"
+    else:
+        s = ""
+
+    print(f"After {spins} day{s}...")
 
     if spouse == "wife":
-        end_text_0 = "\nYou are broke :(\nYou lost your house\nYou lost your wife\nShe took the kids\n\n\nWas it worth it?"
-        end_text_1 = "\nYou made it out!\nYour wife is waiting outside for you.\nShe hugs you and says, \"I'm glad you're back.\""
-        end_text_2 = "\nYou made it out!\nYour wife is waiting outside for you.\nShe hands you a stack of papers\nShe says, \"I want a divorce.\""
-        end_text_3 = "\nYou lost the money your wife gave you! She calls, but you're too ashamed to pick up. You know it's over."
+        end_text_0 = f"\n{Fore.RED}You are broke :(\nYou lost your house\nYou lost your wife\nShe took the kids\n\n\nWas it worth it?{Style.RESET_ALL}"
+        end_text_1 = f"\n{Fore.GREEN}You made it out!\nYour wife is waiting outside for you.\nShe hugs you and says, \"I'm glad you're back.\"{Style.RESET_ALL}"
+        end_text_2 = f"\n{Fore.GREEN}You made it out!\nYour wife is waiting outside for you.\n{Fore.RED}She hands you a stack of papers\nShe says, \"I want a divorce.\"{Style.RESET_ALL}"
+        end_text_3 = f"\n{Fore.RED}You lost the money your wife gave you! She calls, but you're too ashamed to pick up. You know it's over.{Style.RESET_ALL}"
     if spouse == "husband":
-        end_text_0 = "\nYou are broke :(\nYou lost your house\nYou lost your husband\nHe took the kids\n\n\nWas it worth it?"
-        end_text_1 = "\nYou made it out!\nYour husband is waiting outside for you.\nHe hugs you and says, \"I'm glad you're back.\""
-        end_text_2 = "\nYou made it out!\nYour husband is waiting outside for you.\nHe hands you a stack of papers\nHe says, \"I want a divorce.\""
-        end_text_3 = "\nYou lost the money your husband gave you! He calls, but you're too ashamed to pick up. You know it's over."
-    end_text_4 = "Unfortunately, your reduced number of kidneys couldn't handle your diet, and you have perished."
-    end_text_5 = "Unfortunately, you got caught with a fake ID. You've been arrested and have no one to pay your bail. Guess that's it for you."
+        end_text_0 = f"\n{Fore.RED}You are broke :(\nYou lost your house\nYou lost your husband\nHe took the kids\n\n\nWas it worth it?{Style.RESET_ALL}"
+        end_text_1 = f"\n{Fore.GREEN}You made it out!\nYour husband is waiting outside for you.\nHe hugs you and says, \"I'm glad you're back.\"{Style.RESET_ALL}"
+        end_text_2 = f"\n{Fore.GREEN}You made it out!\nYour husband is waiting outside for you.\n{Fore.RED}He hands you a stack of papers\nHe says, \"I want a divorce.\"{Style.RESET_ALL}"
+        end_text_3 = f"\n{Fore.RED}You lost the money your husband gave you! He calls, but you're too ashamed to pick up. You know it's over.{Style.RESET_ALL}"
+    end_text_4 = f"{Fore.RED}Unfortunately, your reduced number of kidneys couldn't handle your diet, and you have perished.{Style.RESET_ALL}"
+    end_text_5 = f"{Fore.RED}Unfortunately, you got caught with a fake ID. You've been arrested and have no one to pay your bail. Guess that's it for you.{Style.RESET_ALL}"
     if source == 0:  # bankruptcy
         print(end_text_0)
     elif source == 1:  # loan payment
-        print(f"You missed your loan payment by {loan_payment:,} credits")
+        print(f"{Fore.RED}You missed your loan payment by {Fore.YELLOW}{loan_payment:,}{Fore.RED} credits{Style.RESET_ALL}")
         print(end_text_0)
     elif source == 2:  # ESCAPE
         achievements["the_light_is_blinding"] = True
@@ -1220,243 +1237,247 @@ def game_over(source):
 
 clear_screen()
 if IS_DEV_BUILD:
-    print(f"Welcome to {Fore.CYAN}Gambling Simulator{Style.RESET_ALL} dev-1.11!\nThis is a developer build and may be unfinished or broken.\n\nPress {btn('enter')} to continue")
+    print(f"Welcome to {Fore.CYAN}Gambling Simulator{Style.RESET_ALL} {Style.BRIGHT}{Fore.LIGHTMAGENTA_EX}dev-1.12!{Style.RESET_ALL}\nThis is a developer build and may be {Fore.RED}unfinished or broken.{Style.RESET_ALL}\n\nPress {btn('enter')} to continue")
 else:
-    print(f"Welcome to Gambling Simulator v1.10!\n\nPress {btn('enter')} to continue")
+    print(f"Welcome to {Fore.CYAN}Gambling Simulator{Style.RESET_ALL} {Style.BRIGHT}{Fore.LIGHTMAGENTA_EX}v1.12!{Style.RESET_ALL}\n\nPress {btn('enter')} to continue")
 input("")
 
-while is_running:
-    achievements_start = {}
-    bonus_achievements_start = {}
+try:
+    while is_running:
+        achievements_start = {}
+        bonus_achievements_start = {}
 
-    for i in achievements.keys():
-        achievements_start.update({i: achievements[i]})
-    for i in bonus_achievements.keys():
-        bonus_achievements_start.update({i: bonus_achievements[i]})
+        for i in achievements.keys():
+            achievements_start.update({i: achievements[i]})
+        for i in bonus_achievements.keys():
+            bonus_achievements_start.update({i: bonus_achievements[i]})
 
-    a_before = 0
-    for i in achievements.keys():
-        if achievements[i]:
-            a_before += 1
+        a_before = 0
+        for i in achievements.keys():
+            if achievements[i]:
+                a_before += 1
 
-    b_before = 0
-    for i in bonus_achievements.keys():
-        if bonus_achievements[i]:
-            b_before += 1
-    
-    clear_screen()
-    if player_credits < 0:
-        player_credits = 0
-    if has_loan:
-        loan_payment += round((loan_payment * interest_percent))
-        if days_passed == 3:
-            print("You need to pay back your loan!")
-            print(f"Your loan payment is: {loan_payment:,}")
-            print(f"Credits: {Fore.YELLOW}{player_credits:,}{Style.RESET_ALL}")
-        if days_passed == 4:
-            visit_bank()
-        days_passed += 1
-    if player_credits <= 0:
-        if not has_loan:
-            print(f"You have no credits. Choose an option:")
-            print("    'bank' to visit the bank")
-            if not has_borrowed and spins >= 10:
-                print(f"    'borrow' to borrow from your {spouse}")
-            if kidneys == 2 and spins >= 50:
-                print("    'kidney' to sell a kidney")
-            option = input(">> ")
-            if option == "bank":
-                visit_bank()
-            elif not has_borrowed and spins >= 10:
-                if option == "borrow":
-                    borrow_from_spouse()
-            elif kidneys == 2 and spins >= 50:
-                if option == "kidney":
-                    sell_kidney()
-            else:
-                game_over(0)
-        else:
-            clear_screen()
-            if has_loan and days_passed > 3:
-                game_over(1)
-    display_home_screen()
-    if player_credits < 0:
-        player_credits = 0
-    clear_screen()
-    bet = 0
-
-    if has_borrow:
-        bet = player_credits
-        achievements["confidence_is_key"] = True
-    else:
-        while bet < 1 or not isinstance(bet, int) or bet > player_credits:
-            try:
-                print(f"Credits: {Fore.YELLOW}{player_credits:,}{Style.RESET_ALL}")
-                bet = int(input("Bet: "))
-                if bet > player_credits:
-                    print("You don't have enough money for that")
-                elif bet == player_credits:
-                    achievements["confidence_is_key"] = True
-                elif bet == 0:
-                    print("Bet must be a non-zero whole number")
-            except ValueError:
-                print("Bet must be a non-zero whole number")
-
-    clear_screen()
-
-    print("Spinning...")
-    
-    if kidneys == 1:
-        time.sleep(6 - speed_upgrades)
-    else:
-        time.sleep(5 - speed_upgrades)
-
-    spin_result = get_letters()
-    spins += 1
-    reward = calculate_reward(spin_result, bet)
-
-    if reward > 0:
-        if has_borrow:
-            bonus_achievements["back_from_the_brink"] = True
-            has_borrow = False
-            has_borrowed = True
-        print("Reward:", reward)
-        if bet == player_credits:
-            achievements["i_can't_stop_winning"] = True
-        total_won += reward
-    else:
-        print("You Lost!")
-        if bet == player_credits:
-            achievements["aw_dangit"] = True
-        if has_borrow:
-            loss = bet
-            total_lost += loss
-            game_over(3)
-        if has_insurance:
-            covered = int(round(((0.01) * insurance_coverage) * bet))
-            if covered <= 1:
-                covered = 1
-            total_covered += covered
-            print("Thankfully, your insurance covered " +
-                  f"{covered:,}" + " credit" + ("s" if covered > 1 else "") + ".")
-            loss = int(bet - covered)
-        else:
-            loss = bet
-        total_lost += loss
-
-        player_credits -= loss
-
-
-    if has_insurance:
-        player_credits -= insurance_payment
+        b_before = 0
+        for i in bonus_achievements.keys():
+            if bonus_achievements[i]:
+                b_before += 1
+        
+        clear_screen()
         if player_credits < 0:
             player_credits = 0
-            achievements["the_bills_caught_up_to_you"] = True
+        if has_loan:
+            loan_payment += round((loan_payment * interest_percent))
+            if days_passed == 3:
+                print("You need to pay back your loan!")
+                print(f"Your loan payment is: {Style.BRIGHT}{Fore.RED}{loan_payment:,}{Style.RESET_ALL} credits")
+                print(f"Credits: {Fore.YELLOW}{player_credits:,}{Style.RESET_ALL}")
+            if days_passed == 4:
+                visit_bank()
+            days_passed += 1
+        if player_credits <= 0:
+            if not has_loan:
+                print(f"You have no credits. Choose an option:")
+                print("    'bank' to visit the bank")
+                if not has_borrowed and spins >= 10:
+                    print(f"    'borrow' to borrow from your {spouse}")
+                if kidneys == 2 and spins >= 50:
+                    print("    'kidney' to sell a kidney")
+                option = input(">> ")
+                if option == "bank":
+                    visit_bank()
+                elif not has_borrowed and spins >= 10:
+                    if option == "borrow":
+                        borrow_from_spouse()
+                elif kidneys == 2 and spins >= 50:
+                    if option == "kidney":
+                        sell_kidney()
+                else:
+                    game_over(0)
+            else:
+                clear_screen()
+                if has_loan and days_passed > 3:
+                    game_over(1)
+        display_home_screen()
+        if player_credits < 0:
+            player_credits = 0
+        clear_screen()
+        bet = 0
 
-    player_credits += reward
+        if has_borrow:
+            bet = player_credits
+            achievements["confidence_is_key"] = True
+        else:
+            while bet < 1 or not isinstance(bet, int) or bet > player_credits:
+                try:
+                    print(f"Credits: {Fore.YELLOW}{player_credits:,}{Style.RESET_ALL}")
+                    bet = int(input(f"Bet: {Fore.YELLOW}"))
+                    print(Style.RESET_ALL)
+                    if bet > player_credits:
+                        print(f"{Fore.RED}You don't have enough money for that.{Style.RESET_ALL}")
+                    elif bet == player_credits:
+                        achievements["confidence_is_key"] = True
+                    elif bet == 0:
+                        print("Bet must be a non-zero whole number")
+                except ValueError:
+                    print("Bet must be a non-zero whole number")
 
-    if player_credits < 0:
-        player_credits = 0
+        clear_screen()
 
-    print(f"\nPress {btn('enter')} to continue")
-    input("")
+        print("Spinning...")
+        
+        if kidneys == 1:
+            time.sleep(6 - speed_upgrades)
+        else:
+            time.sleep(5 - speed_upgrades)
 
-    clear_screen()
+        spin_result = get_letters()
+        spins += 1
+        reward = calculate_reward(spin_result, bet)
 
-    calculate_achievements()
+        if reward > 0:
+            if has_borrow:
+                bonus_achievements["back_from_the_brink"] = True
+                has_borrow = False
+                has_borrowed = True
+            print(f"{Fore.GREEN}Reward: {reward}{Style.RESET_ALL}")
+            if bet == player_credits:
+                achievements["i_can't_stop_winning"] = True
+            total_won += reward
+        else:
+            print(f"{Fore.RED}You Lost!{Style.RESET_ALL}")
+            if bet == player_credits:
+                achievements["aw_dangit"] = True
+            if has_borrow:
+                loss = bet
+                total_lost += loss
+                game_over(3)
+            if has_insurance:
+                covered = int(round(((0.01) * insurance_coverage) * bet))
+                if covered <= 1:
+                    covered = 1
+                total_covered += covered
+                print(f"Thankfully, your {Fore.GREEN}insurance{Style.RESET_ALL} covered " +
+                    f"{Fore.YELLOW}{covered:,}{Style.RESET_ALL}" + " credit" + ("s" if covered > 1 else "") + ".")
+                loss = int(bet - covered)
+            else:
+                loss = bet
+            total_lost += loss
 
-    has_unlocked_achievement = False
-    a = 0
-    for i in achievements.keys():
-        if achievements[i]:
-            a += 1
+            player_credits -= loss
 
-    if a > a_before:
-        has_unlocked_achievement = True
 
-    # BONUS Achievements
-    has_unlocked_bonus_achievement = False
-    b = 0
-    for i in bonus_achievements.keys():
-        if bonus_achievements[i]:
-            b += 1
+        if has_insurance:
+            player_credits -= insurance_payment
+            if player_credits < 0:
+                player_credits = 0
+                achievements["the_bills_caught_up_to_you"] = True
 
-    if b > b_before:
-        has_unlocked_bonus_achievement = True
+        player_credits += reward
 
-    if has_unlocked_achievement or has_unlocked_bonus_achievement:
-        if has_unlocked_achievement:
-            # find newly unlocked achievements
-            a = []
-            for i in achievements.keys():
-                if (achievements[i]) != (achievements_start[i]):
-                    a.append(i)
+        if player_credits < 0:
+            player_credits = 0
 
-            # display achievements
-            if a != []:
-                for i in a:
-                    no_spaces = i.replace("_", " ")
-                    l = []
-                    name = ""
-                    for i in no_spaces.split():
-                        i.capitalize()
-                        l.append(i)
-                    for i in l:
-                        name += f"{i.capitalize()} "
-                    print("Achievement Unlocked:", name)
-        if has_unlocked_bonus_achievement:
-            # find newly unlocked achievements
-            b = []
-            for i in bonus_achievements.keys():
-                if (bonus_achievements[i]) != (bonus_achievements_start[i]):
-                    b.append(i)
+        print(f"\nPress {btn('enter')} to continue")
+        input("")
 
-            # display achievements
-            if b != []:
-                for i in b:
-                    no_spaces = i.replace("_", " ")
-                    l = []
-                    name = ""
-                    for i in no_spaces.split():
-                        i.capitalize()
-                        l.append(i)
-                    for i in l:
-                        name += f"{i.capitalize()} "
-                    print("Bonus Achievement Unlocked:", name)
+        clear_screen()
 
-        input(f"\n{btn('enter')} to continue\n")
+        calculate_achievements()
 
-    if total_won >= 50000 and not is_high_roller:
-            is_high_roller = True
-            clear_screen()
-            print("You can now visit the High Rollers club!")
+        has_unlocked_achievement = False
+        a = 0
+        for i in achievements.keys():
+            if achievements[i]:
+                a += 1
+
+        if a > a_before:
+            has_unlocked_achievement = True
+
+        # BONUS Achievements
+        has_unlocked_bonus_achievement = False
+        b = 0
+        for i in bonus_achievements.keys():
+            if bonus_achievements[i]:
+                b += 1
+
+        if b > b_before:
+            has_unlocked_bonus_achievement = True
+
+        if has_unlocked_achievement or has_unlocked_bonus_achievement:
+            if has_unlocked_achievement:
+                # find newly unlocked achievements
+                a = []
+                for i in achievements.keys():
+                    if (achievements[i]) != (achievements_start[i]):
+                        a.append(i)
+
+                # display achievements
+                if a != []:
+                    for i in a:
+                        no_spaces = i.replace("_", " ")
+                        l = []
+                        name = ""
+                        for i in no_spaces.split():
+                            i.capitalize()
+                            l.append(i)
+                        for i in l:
+                            name += f"{i.capitalize()} "
+                        print(f"{Fore.MAGENTA}Achievement Unlocked: {name}{Style.RESET_ALL}")
+            if has_unlocked_bonus_achievement:
+                # find newly unlocked achievements
+                b = []
+                for i in bonus_achievements.keys():
+                    if (bonus_achievements[i]) != (bonus_achievements_start[i]):
+                        b.append(i)
+
+                # display achievements
+                if b != []:
+                    for i in b:
+                        no_spaces = i.replace("_", " ")
+                        l = []
+                        name = ""
+                        for i in no_spaces.split():
+                            i.capitalize()
+                            l.append(i)
+                        for i in l:
+                            name += f"{i.capitalize()} "
+                        print(f"{Fore.CYAN}Bonus Achievement Unlocked: {name}{Style.RESET_ALL}")
+
             input(f"\n{btn('enter')} to continue\n")
 
-    if player_credits <= 0:
-        pass
-    else:
-        while True:
-            clear_screen()
-            if spins >= 25 and not fake_id:
-                black_market()
-            if not is_high_roller:
-                print(f"Type 'shop' to visit the shop, 'insurance' to buy insurance, or '{Style.DIM}pass{Style.RESET_ALL}' to leave")
-            else:
-                print(f"Type 'shop' to visit the shop, 'insurance' to buy insurance, 'high roller' to visit the High Rollers club, or '{Style.DIM}pass{Style.RESET_ALL}' to leave")
-            in_ = input(">> ")
-            if in_ == "shop":
-                visit_shop()
-                break
-            if in_ == "insurance":
-                insurance_shop()
-                break
-            if in_ == "high roller":
-                high_rollers()
-            if in_ == "pass":
-                break
+        if total_won >= 50000 and not is_high_roller:
+                is_high_roller = True
+                clear_screen()
+                print(f"You can now visit the {Fore.MAGENTA}High Rollers club!{Style.RESET_ALL}")
+                input(f"\n{btn('enter')} to continue\n")
 
-    try:
-        del no_spaces, name, in_
-    except:
-        pass
-    clear_screen()
+        if player_credits <= 0:
+            pass
+        else:
+            while True:
+                clear_screen()
+                if spins >= 25 and not fake_id and random.randint(1,4) == 3:
+                    black_market()
+                if not is_high_roller:
+                    print(f"Type 'shop' to visit the shop, 'insurance' to buy insurance, or '{Style.DIM}pass{Style.RESET_ALL}' to leave")
+                else:
+                    print(f"Type 'shop' to visit the shop, 'insurance' to buy insurance, 'high roller' to visit the High Rollers club, or '{Style.DIM}pass{Style.RESET_ALL}' to leave")
+                in_ = input(">> ")
+                if in_ == "shop":
+                    visit_shop()
+                    break
+                if in_ == "insurance":
+                    insurance_shop()
+                    break
+                if in_ == "high roller":
+                    high_rollers()
+                if in_ == "pass":
+                    break
+
+        try:
+            del no_spaces, name, in_
+        except:
+            pass
+        clear_screen()
+except Exception as e:
+    print(f"The developers are idiots. Report this in a strongly worded email to {Fore.MAGENTA}chloe@tobark.org{Style.RESET_ALL}:\n{e}")

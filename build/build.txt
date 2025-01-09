@@ -2,7 +2,7 @@ BUILDING FROM SOURCE:
 
 To acheive lower executable sizes, use https://python-minifier.com/.
 Place minifed source in 'build/main.min.py'
-Replace vX_XX or vX.XX with the current version number in all commands (Ex: v1_11 or v1.11)
+Replace vX_XX or vX.XX with the current version number in all commands (Ex: v1_12 or v1.12)
 
 These build instructions support Windows 10+, Linux, and macOS 10.15 (Catalina) or newer
 

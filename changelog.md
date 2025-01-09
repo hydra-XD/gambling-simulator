@@ -1,8 +1,12 @@
 # Gambling Simulator Changelog
 
+## v1.12 (A World of Color)
+
+- Added Color
+
 ## v1.11 (The Rich & Shifty Update)
 
-- Adeed the High Rollers Club
+- Added the High Rollers Club
 - More bonus achievements
 - Sell a kidney
 - Tons of fixes
