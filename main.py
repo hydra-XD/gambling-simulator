@@ -254,6 +254,7 @@ def calculate_achievements():
 # display all achievements
 def display_achievements():
     calculate_achievements()
+    clear_screen()
     global achievements, console_used
     a = 0
     for i in achievements.keys():
@@ -554,9 +555,9 @@ def get_letters() -> list:
         c = b if random.randint(1, round(15 - luck / 2)
                                 ) == 1 else letters[random.randint(0, 25)]
 
-        colora = a
-        colorb = b
-        colorc = c
+    colora = a
+    colorb = b
+    colorc = c
 
     if (a + b + c).upper() in bonuses:
         colora = Fore.MAGENTA + a + Style.RESET_ALL
@@ -793,7 +794,9 @@ def play_roulette():
 
     while True:
         clear_screen()
-        print(f"""
+
+        while True:
+            print(f"""
 Chips: {roulette_chips}
 
 Bet on a category of numbers.
@@ -814,35 +817,51 @@ Dozen One       (1-12)
 Dozen Two       (13-24)
 Dozen Three     (25-36)
 """)
-        bet_type = input("\nBet Type: ").lower()
-        if bet_type == "column one":
-            x = column_one
-        if bet_type == "column two":
-            x = column_two
-        if bet_type == "column three":
-            x = column_three
-        if bet_type == "dozen one":
-            x = dozen_one
-        if bet_type == "dozen two":
-            x = dozen_two
-        if bet_type == "dozen three":
-            x = dozen_three
-        if bet_type == "low":
-            x = low
-        if bet_type == "high":
-            x = high
-        if bet_type == "red":
-            x = reds
-        if bet_type == "black":
-            x = blacks
-        if bet_type == "odd":
-            x = [a if a % 2 != 0 else None for a in range(1, 37)]
-        if bet_type == "even":
-            x = [a if a % 2 == 0 else None for a in range(1, 37)]
+            bet_type = input("\nBet Type: ").lower()
+            if bet_type == "column one":
+                x = column_one
+                break
+            if bet_type == "column two":
+                x = column_two
+                break
+            if bet_type == "column three":
+                x = column_three
+                break
+            if bet_type == "dozen one":
+                x = dozen_one
+                break
+            if bet_type == "dozen two":
+                x = dozen_two
+                break
+            if bet_type == "dozen three":
+                x = dozen_three
+                break
+            if bet_type == "low":
+                x = low
+                break
+            if bet_type == "high":
+                x = high
+                break
+            if bet_type == "red":
+                x = reds
+                break
+            if bet_type == "black":
+                x = blacks
+                break
+            if bet_type == "odd":
+                x = [a if a % 2 != 0 else None for a in range(1, 37)]
+                break
+            if bet_type == "even":
+                x = [a if a % 2 == 0 else None for a in range(1, 37)]
+                break
+            else:
+                continue
 
         while True:
-            bet_amount = int(input("Bet Amount: "))
-
+            try:
+                bet_amount = int(input("Bet Amount: "))
+            except:
+                continue
             if bet_amount <= 0 or bet_amount > roulette_chips:
                 print("Enter a non-zero number of chips that you can afford.")
             else:
@@ -860,7 +879,7 @@ Dozen Three     (25-36)
         roulette_chips += reward
 
         print(Fore.GREEN + "Reward: " + str(reward) + Style.RESET_ALL)
-        print(Fore.YELLOW + "Chips: " + str(roulette_chips) + Style.RESET_ALL)
+        print(Fore.RED + "Chips: " + str(roulette_chips) + Style.RESET_ALL)
 
         menu = input(f"'leave' to leave or {btn('enter')} to continue")
 
@@ -889,7 +908,7 @@ def high_rollers():
     while True:
         clear_screen()
         print(f"Welcome to the {Fore.MAGENTA}High Rollers club!{Style.RESET_ALL}")
-        print(f"You have {roulette_chips} chips")
+        print(f"You have {Fore.RED}{roulette_chips}{Style.RESET_ALL} chips")
         menu = input(f"\ntype 'chips' to buy more chips, 'credits' to cash in chips, 'spin' to play roulette, or '{Style.DIM}pass{Style.RESET_ALL}' to leave\n>> ")
         if menu == "chips":
             clear_screen()
@@ -1070,11 +1089,14 @@ def visit_bank():
             if len(in_.split(" ")) == 1:
                 continue
             if in_.split(" ")[0] == "loan":
-                amount = int(in_.split(" ")[1])
+                try:
+                    amount = int(in_.split(" ")[1])
+                except:
+                    continue
                 loan_amount = amount
 
                 arrest_chance = (-1 * (3.874 * (10 ** -11))*(loan_amount ** 2)) + (0.0001111 * loan_amount) + 18.87
-                arrest_chance -= 4(luck)
+                arrest_chance -= (4 * luck)
 
                 arrest_chance = int(arrest_chance)
 
@@ -1275,9 +1297,15 @@ try:
                 visit_bank()
             days_passed += 1
         if player_credits <= 0:
-            if not has_loan:
+
+            if has_loan and has_borrowed and kidneys != 2:
+                game_over(0)
+
+            while True:
+                clear_screen()
                 print(f"You have no credits. Choose an option:")
-                print("    'bank' to visit the bank")
+                if not has_loan:
+                    print("    'bank' to visit the bank")
                 if not has_borrowed and spins >= 10:
                     print(f"    'borrow' to borrow from your {spouse}")
                 if kidneys == 2 and spins >= 50:
@@ -1291,7 +1319,7 @@ try:
                 elif kidneys == 2 and spins >= 50:
                     if option == "kidney":
                         sell_kidney()
-                else:
+                elif option == "":
                     game_over(0)
             else:
                 clear_screen()
@@ -1313,13 +1341,16 @@ try:
                     bet = int(input(f"Bet: {Fore.YELLOW}"))
                     print(Style.RESET_ALL)
                     if bet > player_credits:
+                        clear_screen()
                         print(f"{Fore.RED}You don't have enough money for that.{Style.RESET_ALL}")
-                    elif bet == player_credits:
+                    elif bet == player_credits and bet != 0:
                         achievements["confidence_is_key"] = True
                     elif bet == 0:
-                        print("Bet must be a non-zero whole number")
+                        clear_screen()
+                        print(Style.RESET_ALL + "Bet must be a non-zero whole number")
                 except ValueError:
-                    print("Bet must be a non-zero whole number")
+                    clear_screen()
+                    print(Style.RESET_ALL + "Bet must be a non-zero whole number")
 
         clear_screen()
 
