@@ -228,6 +228,9 @@ def calculate_achievements():
     if total_spent_in_shop >= 100000:
         achievements["writing_checks_left_and_right"] = True
 
+    if speed_upgrades >= 5:
+        achievements["overload"] = True
+
     if has_insurance:
         achievements["insured"] = True
     if insurance_payment > insurance_base:
@@ -254,7 +257,6 @@ def calculate_achievements():
 # display all achievements
 def display_achievements():
     calculate_achievements()
-    clear_screen()
     global achievements, console_used
     a = 0
     for i in achievements.keys():
@@ -501,13 +503,13 @@ def display_home_screen():
             elif insurance_type == 3:
                 plan = "Hobbyist Plan"
             elif insurance_type == 4:
-                plan = "Gambler's Dream"
+                plan = f"{Fore.MAGENTA}Gambler's Dream{Style.RESET_ALL}"
 
             if round(total_covered / 20) >= insurance_base:
                 insurance_payment = round(total_covered / 20)
 
             print(
-                f"\nInsurance Information:\n- Plan: {plan}\n- Payment: {insurance_payment:,} credits/day\n- Coverage: {insurance_coverage}%\n")
+                f"\nInsurance Information:\n- Plan: {plan}\n- Payment: {Fore.YELLOW}{insurance_payment:,}{Style.RESET_ALL} credits/day\n- Coverage:{Fore.GREEN} {insurance_coverage}%{Style.RESET_ALL}\n")
             print(("-" * 20))
 
         print(f"\n{pick_flavor_text()}\n")
@@ -519,6 +521,7 @@ def display_home_screen():
                 f"\nType 'achievements' to view your achievements or press {btn('enter')} to spin\n>> ")
 
             if menu == "achievements":
+                clear_screen()
                 display_achievements()
                 input(f"\nPress {btn('enter')} to continue\n")
             elif menu == cake:
@@ -531,6 +534,7 @@ def display_home_screen():
                 f"\nType 'achievements' to view your achievements, press {btn('enter')} to spin, or type '{Fore.GREEN}leave{Style.RESET_ALL}' to {Fore.GREEN}escape{Style.RESET_ALL}\n>> ")
 
             if menu_ == "achievements":
+                clear_screen()
                 display_achievements()
                 input(f"\nPress {btn('enter')} to continue\n")
             elif menu_ == "thecakeisalie":
@@ -637,7 +641,7 @@ Here are our plans:
     [{ach_x if insurance_type == 1 else " "}] Starter Plan (Starts at {Fore.YELLOW}5{Style.RESET_ALL} credits/day, {Fore.GREEN}5%{Style.RESET_ALL} coverage)
     [{ach_x if insurance_type == 2 else " "}] Basic Plan (Starts at {Fore.YELLOW}10{Style.RESET_ALL} credits/day, {Fore.GREEN}10%{Style.RESET_ALL} coverage)
     [{ach_x if insurance_type == 3 else " "}] Hobbyist Plan (Starts at {Fore.YELLOW}50{Style.RESET_ALL} credits/day, {Fore.GREEN}25%{Style.RESET_ALL} coverage)
-    [{ach_x if insurance_type == 4 else " "}] Gambler's Dream (Starts at {Fore.YELLOW}250{Style.RESET_ALL} credits/day, {Fore.GREEN}50%{Style.RESET_ALL} coverage)
+    [{ach_x if insurance_type == 4 else " "}] {Fore.MAGENTA}Gambler's Dream{Style.RESET_ALL} (Starts at {Fore.YELLOW}250{Style.RESET_ALL} credits/day, {Fore.GREEN}50%{Style.RESET_ALL} coverage)
 
 NOTE: All plans require a down payment equal to {Fore.YELLOW}10 times their starting rate{Style.RESET_ALL}
       Rate increases based on how much your insurance has covered
@@ -981,7 +985,7 @@ def visit_shop():
     Beer: +{Fore.YELLOW}5% Reward Multiplier{Style.RESET_ALL} (Cost: {Fore.YELLOW}{reward_upgrade_price}{Style.RESET_ALL})
     Fries: +{Fore.MAGENTA}0.5 Luck{Style.RESET_ALL} (Cost: {Fore.YELLOW}{luck_upgrade_price}{Style.RESET_ALL})
     Hot Dog: +{Fore.CYAN}0.1 Streak Multiplier{Style.RESET_ALL} (Cost: {Fore.YELLOW}{streak_upgrade_price}{Style.RESET_ALL})
-    Energy Drink: -{Fore.GREEN}1s Wheel Spin Time{Style.RESET_ALL} [{f"{Fore.GREEN}{Style.BRIGHT}" if speed_upgrades >= 5 else ""}{speed_upgrades if speed_upgrades < 5 else 5}/5{Style.RESET_ALL}] (Cost: {Fore.YELLOW}{speed_upgrade_price}{Style.RESET_ALL})
+    Energy Drink: -{Fore.GREEN}1s Wheel Spin Time{Style.RESET_ALL} [{Fore.GREEN if speed_upgrades == 5 else ""}{speed_upgrades}/5{Style.RESET_ALL}] (Cost: {Fore.YELLOW}{speed_upgrade_price}{Style.RESET_ALL})
     """)
     print(f"Type 'buy <item name>' to buy an item or '{Style.DIM}pass{Style.RESET_ALL}' to leave")
     while True:
@@ -1020,7 +1024,7 @@ def visit_shop():
             if speed_upgrade_price > player_credits:
                 print(f"{Fore.RED}You can't afford that!{Style.RESET_ALL}")
                 continue
-            elif speed_upgrades > 3:
+            elif speed_upgrades >= 5:
                 print(f"{Fore.GREEN}You can't upgrade this stat anymore!{Style.RESET_ALL}")
                 achievements["overload"] = True
                 continue
@@ -1028,6 +1032,8 @@ def visit_shop():
                 player_credits -= speed_upgrade_price
                 speed_upgrade_price = round(1.5*speed_upgrade_price)
                 speed_upgrades += 1
+                if speed_upgrades == 5:
+                    achievements["overload"] = True
                 break
     total_spent_in_shop = (s - player_credits)
     if purchase in ["beer", "fries", "hot dog", "energy drink"] and kidneys == 1:
@@ -1132,8 +1138,8 @@ def visit_bank():
             return
         else:
             print(
-                f"Time to pay your loan back.\nYour loan payment is {Fore.YELLOW}{loan_payment:,}{Style.RESET_ALL} credits")
-            print("Credits:", player_credits)
+                f"Time to pay your loan back.\nYour loan payment is {Fore.YELLOW}{loan_payment:,}{Style.RESET_ALL} credits.")
+            print(f"Credits: {Fore.YELLOW}{player_credits:,}{Style.RESET_ALL}")
             input(f"\nPress {btn('enter')} to continue\n")
             if player_credits > loan_payment:
                 player_credits -= loan_payment
@@ -1290,37 +1296,37 @@ try:
         if has_loan:
             loan_payment += round((loan_payment * interest_percent))
             if days_passed == 3:
-                print("You need to pay back your loan!")
-                print(f"Your loan payment is: {Style.BRIGHT}{Fore.RED}{loan_payment:,}{Style.RESET_ALL} credits")
-                print(f"Credits: {Fore.YELLOW}{player_credits:,}{Style.RESET_ALL}")
-            if days_passed == 4:
                 visit_bank()
             days_passed += 1
         if player_credits <= 0:
 
-            if has_loan and has_borrowed and kidneys != 2:
+            if has_loan and (spins < 10 or has_borrowed) and (spins < 50 or kidneys != 2):
                 game_over(0)
 
-            while True:
-                clear_screen()
-                print(f"You have no credits. Choose an option:")
-                if not has_loan:
-                    print("    'bank' to visit the bank")
-                if not has_borrowed and spins >= 10:
-                    print(f"    'borrow' to borrow from your {spouse}")
-                if kidneys == 2 and spins >= 50:
-                    print("    'kidney' to sell a kidney")
-                option = input(">> ")
-                if option == "bank":
-                    visit_bank()
-                elif not has_borrowed and spins >= 10:
-                    if option == "borrow":
-                        borrow_from_spouse()
-                elif kidneys == 2 and spins >= 50:
-                    if option == "kidney":
-                        sell_kidney()
-                elif option == "":
-                    game_over(0)
+            elif not has_loan or (spins >= 10 and not has_borrowed) or (spins >= 50 and kidneys == 2):
+                while True:
+                    clear_screen()
+                    print(f"You have no credits. Choose an option:")
+                    if not has_loan:
+                        print("    'bank' to visit the bank")
+                    if not has_borrowed and spins >= 10:
+                        print(f"    'borrow' to borrow from your {spouse}")
+                    if kidneys == 2 and spins >= 50:
+                        print("    'kidney' to sell a kidney")
+                    option = input(">> ")
+                    if option == "bank":
+                        visit_bank()
+                        break
+                    elif not has_borrowed and spins >= 10:
+                        if option == "borrow":
+                            borrow_from_spouse()
+                            break
+                    elif kidneys == 2 and spins >= 50:
+                        if option == "kidney":
+                            sell_kidney()
+                            break
+                    elif option == "":
+                        game_over(0)
             else:
                 clear_screen()
                 if has_loan and days_passed > 3:
@@ -1340,6 +1346,9 @@ try:
                     print(f"Credits: {Fore.YELLOW}{player_credits:,}{Style.RESET_ALL}")
                     bet = int(input(f"Bet: {Fore.YELLOW}"))
                     print(Style.RESET_ALL)
+                    if bet == -1:
+                        bet = player_credits
+                        achievements["confidence_is_key"] = True
                     if bet > player_credits:
                         clear_screen()
                         print(f"{Fore.RED}You don't have enough money for that.{Style.RESET_ALL}")
@@ -1357,9 +1366,9 @@ try:
         print("Spinning...")
         
         if kidneys == 1:
-            time.sleep(6 - speed_upgrades)
+            time.sleep(7 - speed_upgrades)
         else:
-            time.sleep(5 - speed_upgrades)
+            time.sleep(5.5 - speed_upgrades)
 
         spin_result = get_letters()
         spins += 1

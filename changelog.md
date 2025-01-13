@@ -3,6 +3,9 @@
 ## v1.12 (A World of Color)
 
 - Added Color
+- Error handling fixes
+- Fixed loans
+- Slightly reworked energy drinks
 
 ## v1.11 (The Rich & Shifty Update)
 
