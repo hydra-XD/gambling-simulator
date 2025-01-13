@@ -2,7 +2,9 @@ import random
 import time
 import os
 import types
-from colorama import Fore, Back, Style
+from colorama import Fore, Back, Style, just_fix_windows_console
+
+just_fix_windows_console()
 
 # Debug
 IS_DEV_BUILD = False
