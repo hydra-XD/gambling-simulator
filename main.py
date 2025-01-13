@@ -1130,7 +1130,7 @@ def visit_bank():
 
                     print(f"You took out a loan of {Fore.YELLOW}{amount:,}{Style.RESET_ALL} credits.")
                     if not fake_id:
-                        print(f"Be prepared to pay it back in {Fore.YELLOW}three{Style.RESET_ALL} days.")
+                        print(f"Be prepared to pay it back in {Fore.YELLOW}four{Style.RESET_ALL} days.")
                     input(f"\nPress {btn('enter')} to continue\n")
                     return
     else:

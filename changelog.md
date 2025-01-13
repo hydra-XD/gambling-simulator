@@ -4,7 +4,7 @@
 
 - Added Color
 - Error handling fixes
-- Fixed loans
+- Fixed and slightly reworked loans
 - Slightly reworked energy drinks
 
 ## v1.11 (The Rich & Shifty Update)
