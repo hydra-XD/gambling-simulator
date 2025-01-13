@@ -1267,9 +1267,9 @@ def game_over(source):
 
 clear_screen()
 if IS_DEV_BUILD:
-    print(f"Welcome to {Fore.CYAN}Gambling Simulator{Style.RESET_ALL} {Style.BRIGHT}{Fore.LIGHTMAGENTA_EX}dev-1.12!{Style.RESET_ALL}\nThis is a developer build and may be {Fore.RED}unfinished or broken.{Style.RESET_ALL}\n\nPress {btn('enter')} to continue")
+    print(f"Welcome to {Fore.CYAN}Gambling Simulator{Style.RESET_ALL} {Style.BRIGHT}{Fore.LIGHTMAGENTA_EX}dev-1.12.1!{Style.RESET_ALL}\nThis is a developer build and may be {Fore.RED}unfinished or broken.{Style.RESET_ALL}\n\nPress {btn('enter')} to continue")
 else:
-    print(f"Welcome to {Fore.CYAN}Gambling Simulator{Style.RESET_ALL} {Style.BRIGHT}{Fore.LIGHTMAGENTA_EX}v1.12!{Style.RESET_ALL}\n\nPress {btn('enter')} to continue")
+    print(f"Welcome to {Fore.CYAN}Gambling Simulator{Style.RESET_ALL} {Style.BRIGHT}{Fore.LIGHTMAGENTA_EX}v1.12.1!{Style.RESET_ALL}\n\nPress {btn('enter')} to continue")
 input("")
 
 try:
