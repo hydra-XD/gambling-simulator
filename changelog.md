@@ -1,5 +1,11 @@
 # Gambling Simulator Changelog
 
+## v1.13 (The Fungi & Fabrication Update)
+
+- Replaced the Fake ID with some alluring fungi
+- Plug-in mod support!
+  - Details in documentation for how to use and create mods
+
 ## v1.12 (A World of Color)
 
 - Added Color
