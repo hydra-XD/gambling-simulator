@@ -188,10 +188,17 @@ bar_actions = [
     f"The bartender isn't in. There's a {Fore.RED}woman{Style.RESET_ALL} at the counter who eyes you with an {Fore.MAGENTA}emotion{Style.RESET_ALL} you can't decipher."
 ]
 
-def load_mods():
-    global mods
+def find_mods_dir():
+    if getattr(sys, 'frozen', False):
+        mods_dir = os.path.join(os.path.dirname(sys.executable), "mods")        
+    else:
+        mods_dir = "./mods/"
 
-    mods_dir = "./mods/" #os.path.join(base_path, "mods")
+    return mods_dir
+
+def load_mods():
+    global mods, mods_dir
+
     disabled_file = os.path.join(mods_dir, "disabled.txt")
 
     # Read disabled mods
@@ -1395,7 +1402,9 @@ def game_over(source, end_text=""):
 current_directory = os.path.dirname(os.path.abspath(__file__))
 os.chdir(current_directory)
 
-if os.path.isdir("./mods/"):
+mods_dir = find_mods_dir() 
+
+if os.path.exists(mods_dir) and os.path.isdir(mods_dir):
     load_mods()
     mod_count = len(mods)
     if mod_count > 0:
