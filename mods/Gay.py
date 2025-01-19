@@ -12,7 +12,7 @@ class Gay:
     def __str__(self):
         return "GayMod"
         
-    def description(self):
+    def description(self, globals):
         return "Makes you gay"
 
     def name(self, globals):

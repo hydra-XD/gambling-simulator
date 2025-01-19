@@ -19,5 +19,5 @@ class DayCounter:
     def name(self, globals):
         return "DayCounter"
 
-    def description(self):
+    def description(self, globals):
         return "Adds a day counter at the beginning of each day"

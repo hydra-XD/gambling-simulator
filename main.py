@@ -1414,8 +1414,7 @@ if IS_MODDED:
     for index, mod in enumerate(mods):
         attrs = [a for a in dir(mod) if callable(getattr(mod, a)) and not any(n in a for n in ["name", "description", "__"])]
         print(f"\t{index} - {mod.name(globals())} ({', '.join(attrs)})")
-        print(f"\t\t{mod.description()}")
-        
+        print("\t\t" + mod.description(globals()))        
 
     input(f"\nPress {btn('enter')} to continue\n")
         

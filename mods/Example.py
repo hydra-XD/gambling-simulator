@@ -6,52 +6,54 @@ class Example: # entire mod
     def name(self, globals): # mod name, formatting optional
         local_globals = globals # grab global vars from main
         Fore = local_globals["Fore"] # define colorama Fore to use for formatting (optional)
+        Style = local_globals["Style"] # define colorama Style to use for formatting (optional)
 
         return f"{Fore.GREEN}Example{Style.RESET_ALL}" # expects string to be returned
 
     def description(self, globals): # mod description, formatting optional
         local_globals = globals # grab global vars from main
         Fore = local_globals["Fore"] # define colorama Fore to use for formatting (optional)
+        Style = local_globals["Style"] # define colorama Style to use for formatting (optional)
 
         return f"{Fore.BLUE}Mod template{Style.RESET_ALL}" # expects string to be returned
 
 
 
     # scripting methods
-    def onRun(): # on first load
+    def onRun(self, globals): # on first load
         local_globals = globals # grab global vars from main
 
         btn = local_globals["btn"] # define btn function to print button prompts (optional)
         clear_screen = local_globals["clear_screen"] # define function to clear screen (optional)
 
         Fore = local_globals["Fore"] # define colorama Fore to use for formatting (optional)
-        Style = local_globals["Fore"] # define colorama Style to use for formatting (optional)
+        Style = local_globals["Style"] # define colorama Style to use for formatting (optional)
 
         # run code here
 
         return local_globals # expects local_globals to be returned
 
-    def dayStart(): # beginning of every day
+    def dayStart(self, globals): # beginning of every day
         local_globals = globals # grab global vars from main
 
         btn = local_globals["btn"] # define btn function to print button prompts (optional)
         clear_screen = local_globals["clear_screen"] # define function to clear screen (optional)
 
         Fore = local_globals["Fore"] # define colorama Fore to use for formatting (optional)
-        Style = local_globals["Fore"] # define colorama Style to use for formatting (optional)
+        Style = local_globals["Style"] # define colorama Style to use for formatting (optional)
 
         # run code here
 
         return local_globals # expects local_globals to be returned
 
-    def dayEnd(): # end of every day
+    def dayEnd(self, globals): # end of every day
         local_globals = globals # grab global vars from main
 
         btn = local_globals["btn"] # define btn function to print button prompts (optional)
         clear_screen = local_globals["clear_screen"] # define function to clear screen (optional)
 
         Fore = local_globals["Fore"] # define colorama Fore to use for formatting (optional)
-        Style = local_globals["Fore"] # define colorama Style to use for formatting (optional)
+        Style = local_globals["Style"] # define colorama Style to use for formatting (optional)
 
         # run code here
 
@@ -60,20 +62,23 @@ class Example: # entire mod
 
 
     # text methods
-    def barAction(self): # actions for bartender
+    def barAction(self, globals): # actions for bartender
+        local_globals = globals # grab global vars from main
         Fore = local_globals["Fore"] # define colorama Fore to use for formatting (optional)
-        Style = local_globals["Fore"] # define colorama Style to use for formatting (optional)
+        Style = local_globals["Style"] # define colorama Style to use for formatting (optional)
 
         return ["Example", f"{Fore.RED}Colored Example{Style.RESET_ALL}"] # expects list of strings to be returned
 
-    def barDialogue(self): # dialogue for bartender
+    def barDialogue(self, globals): # dialogue for bartender
+        local_globals = globals # grab global vars from main
         Fore = local_globals["Fore"] # define colorama Fore to use for formatting (optional)
-        Style = local_globals["Fore"] # define colorama Style to use for formatting (optional)
+        Style = local_globals["Style"] # define colorama Style to use for formatting (optional)
 
         return ["Example", f"{Fore.RED}Colored Example{Style.RESET_ALL}"] # expects list of strings to be returned
 
-    def flavorText(self): # flavor text for home screen
+    def flavorText(self, globals): # flavor text for home screen
+        local_globals = globals # grab global vars from main
         Fore = local_globals["Fore"] # define colorama Fore to use for formatting (optional)
-        Style = local_globals["Fore"] # define colorama Style to use for formatting (optional)
+        Style = local_globals["Style"] # define colorama Style to use for formatting (optional)
 
         return [{"days_start": 0, "days_end": 1, "text": "Example", "displayed": False}] # expects list of dicts to be returned
