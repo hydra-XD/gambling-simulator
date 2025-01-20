@@ -82,3 +82,9 @@ class Example: # entire mod
         Style = local_globals["Style"] # define colorama Style to use for formatting (optional)
 
         return [{"days_start": 0, "days_end": 1, "text": "Example", "displayed": False}] # expects list of dicts to be returned
+
+    
+
+    # item methods
+    def barItem(self): # adds purchaseable items to bar
+        return [{"name": "Cocktail", "stat": "days", "description": "Days", "change": 3, "price": 200, "maximum": -1}] # expects list of dicts to be returned

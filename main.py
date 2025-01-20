@@ -1107,7 +1107,7 @@ def visit_shop():
     s = player_credits
 
     print("Welcome to the bar!")
-    action = random.randint(0, len(bar_actions))
+    action = random.randint(0, (len(bar_actions) -1))
     if action == 0:
         print(f"{bar_actions[0]}{bar_dialogue[bar_dialogue_count]}")
         bar_dialogue_count += 1
@@ -1123,8 +1123,15 @@ def visit_shop():
     Beer: +{Fore.YELLOW}5% Reward Multiplier{Style.RESET_ALL} (Cost: {Fore.YELLOW}{reward_upgrade_price}{Style.RESET_ALL})
     Fries: +{Fore.MAGENTA}0.5 Luck{Style.RESET_ALL} (Cost: {Fore.YELLOW}{luck_upgrade_price}{Style.RESET_ALL})
     Hot Dog: +{Fore.CYAN}0.1 Streak Multiplier{Style.RESET_ALL} (Cost: {Fore.YELLOW}{streak_upgrade_price}{Style.RESET_ALL})
-    Energy Drink: -{Fore.GREEN}1s Wheel Spin Time{Style.RESET_ALL} [{Fore.GREEN if speed_upgrades == 5 else ""}{speed_upgrades}/5{Style.RESET_ALL}] (Cost: {Fore.YELLOW}{speed_upgrade_price}{Style.RESET_ALL})
-    """)
+    Energy Drink: -{Fore.GREEN}1s Wheel Spin Time{Style.RESET_ALL} [{Fore.GREEN if speed_upgrades == 5 else ""}{speed_upgrades}/5{Style.RESET_ALL}] (Cost: {Fore.YELLOW}{speed_upgrade_price}{Style.RESET_ALL})""")
+    for mod in mods:
+        if hasattr(mod, "barItem"):
+            new_items = mod.barItem()
+            for item in new_items:
+                print(f"    {item['name']}: {'+' if item['change'] > 0 else '-'}{item['change']} {item['description']} (Cost: {Fore.YELLOW}{item['price']}{Style.RESET_ALL})")
+
+    print("")
+
     print(f"Type 'buy <item name>' to buy an item or '{Style.DIM}pass{Style.RESET_ALL}' to leave")
     while True:
         in_ = input(">> ")
@@ -1173,6 +1180,8 @@ def visit_shop():
                 if speed_upgrades == 5:
                     achievements["overload"] = True
                 break
+
+        
     total_spent_in_shop = (s - player_credits)
     if purchase in ["beer", "fries", "hot dog", "energy drink"] and kidneys == 1:
         game_over(4)
